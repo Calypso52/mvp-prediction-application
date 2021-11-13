@@ -1,0 +1,10 @@
+.pred-outerwrapper {
+    position: absolute;
+    left: 600px;
+    width: 400px;
+    height: 500px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, .4);
+    padding: 1%;
+}
