@@ -15,3 +15,5 @@ under folder 'test proxy server', run order: (Open two terminals)
 under folder 'mvp-prediction-frontend' run order:
 
 `npm start`
+
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo11.13.png)
