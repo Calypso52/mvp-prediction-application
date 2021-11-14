@@ -4,7 +4,7 @@
 
 ### 1. start 2 server
 
-under folder '测试代理服务器', run order: (Open two terminals)
+under folder 'test proxy server', run order: (Open two terminals)
 
 `node server1.js`
 
