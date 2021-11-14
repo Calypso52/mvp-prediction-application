@@ -2,6 +2,7 @@
 
 ## Front-end page startup method
 
+demo video: Front-end page demo11.13.mp4
 ### 1. start 2 server
 
 under folder 'test proxy server', run order: (Open two terminals)
