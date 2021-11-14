@@ -6,6 +6,9 @@ import StatisticBox from './component/StatisticBox'
 import PredictionBox from './component/PredictionBox'
 
 export default class App extends Component {
+  componentWillMount = () => {
+    document.body.style.backgroundImage = 'url(http://www.sinaimg.cn/dy/slidenews/2_img/2013_19/786_970279_926252.jpg)';
+  }
   state = {
     // 远程搜索下拉框数据
     players: [],
