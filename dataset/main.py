@@ -18,6 +18,7 @@ def get_one_page(url, headers=None):
 
 if __name__ == "__main__":
     url = 'https://www.basketball-reference.com/leagues/NBA_2021_totals.html'
+    candidates = ["Nikola Jokić", "Joel Embiid", "Stephen Curry"]
     html = get_one_page(url)
     soup = BeautifulSoup(html, features='html.parser')
 
@@ -42,6 +43,7 @@ if __name__ == "__main__":
                         personal_stat["id"] = str(uuid.uuid4())
                         name_package.add(name)
                         personal_stat["name"] = name
+                        personal_stat["label"] = 1 if name in candidates else 0
                     else:
                         exist = True
                 else:
