@@ -23,7 +23,8 @@ export default class Search extends Component {
                         response => {
                             const responseData = response.data;
                             // 请求成功后通知搜索数据结果栏更新状态（需要修改）
-                            this.props.updateStatistic({ playerStatistic: responseData[0], isSearchStatisticLoading: false });
+                            const filteredName = this.filterKeyName(keyWord.toLowerCase(), responseData);
+                            this.props.updateStatistic({ playerStatistic: filteredName[0], isSearchStatisticLoading: false });
                         },
                         error => {
                             // 请求失败通知搜索数据结果栏更新失败界面（需要修改）

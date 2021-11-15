@@ -15,7 +15,13 @@ app.get('/playerStatistic',(request,response)=>{
 		{id:uuid(), name:'LeBron James', pts: 24.8, reb: 5.5, ast: 7.0, stl: 2.3, blk: 0.8, tov: 4.2},
 		{id:uuid(), name:'Kevin Durant', pts: 29.5, reb: 8.5, ast: 5.0, stl: 0.6, blk: 0.7, tov: 3.5},
 		{id:uuid(), name:'Carmelo Anthony', pts: 17.2, reb: 3.8, ast: 1.0, stl: 0.8, blk: 0.9, tov: 0.8},
-		{id:uuid(), name:'Russel Westbrook', pts: 19.3, reb: 9.1, ast: 8.9, stl: 1.4, blk: 0.3, tov: 5.3}
+		{id:uuid(), name:'Russel Westbrook', pts: 19.3, reb: 9.1, ast: 8.9, stl: 1.4, blk: 0.3, tov: 5.3},
+		{id:uuid(), name:'James Harden', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9},
+		{id:uuid(), name:'Paul George', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9},
+		{id:uuid(), name:'Giannis Antetokounmpo', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9},
+		{id:uuid(), name:'Stephen Curry', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9},
+		{id:uuid(), name:'Damian Lillard', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9},
+		{id:uuid(), name:'Bradley Beal', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9},
 	]
 	response.send(playerStatistics)
 })
