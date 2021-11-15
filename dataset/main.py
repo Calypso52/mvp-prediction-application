@@ -41,7 +41,7 @@ if __name__ == "__main__":
             for t in td:
                 if t.get("csk"):
                     names = t["csk"].split(",")
-                    name = names[0] + " " + names[1]
+                    name = names[1] + " " + names[0]
                     if name not in name_package:
                         personal_stat["id"] = str(uuid.uuid4())
                         name_package.add(name)
