@@ -18,7 +18,10 @@ def get_one_page(url, headers=None):
 
 if __name__ == "__main__":
     url = 'https://www.basketball-reference.com/leagues/NBA_2021_totals.html'
-    candidates = ["Nikola Jokić", "Joel Embiid", "Stephen Curry"]
+    candidates = ["Nikola Jokić", "Joel Embiid", "Stephen Curry", "Giannis Antetokounmpo",
+                  "Chris Paul", "Chris Paul", "Luka Dončić", "Damian Lillard", "Julius Randle",
+                  "Derrick Rose", "Rudy Gobert", "Russell Westbrook", "Ben Simmons", "James Harden",
+                  "LeBron James", "Kawhi Leonard"]
     html = get_one_page(url)
     soup = BeautifulSoup(html, features='html.parser')
 
