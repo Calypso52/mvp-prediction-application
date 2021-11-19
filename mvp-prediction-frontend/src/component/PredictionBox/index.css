@@ -2,8 +2,10 @@
     position: absolute;
     left: 600px;
     width: 400px;
-    height: 500px;
-    background: #fff;
+    height: 520px;
+    background: #242526;
+    background-image: url('https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F0220%2F566746d6j00qot8gc002qd000m800rsp.jpg&thumbnail=750x2147483647&quality=85&type=jpg');
+    background-size: cover;
     border-radius: 15px;
     box-shadow: 0 5px 15px -5px rgba(0, 0, 0, .4);
     padding: 1%;

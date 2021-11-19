@@ -1,11 +1,10 @@
 .sta-outerwrapper {
     position: absolute;
     top: 220px;
-    width: 400px;
-    height: 280px;
+    width: 480px;
+    height: 300px;
     margin: 50px auto;
-    background: #fff;
-    border-radius: 15px;
+    background-color: #242526;
+    border-radius: 10px;
     box-shadow: 0 5px 15px -5px rgba(0, 0, 0, .4);
-    padding: 1%;
 }
