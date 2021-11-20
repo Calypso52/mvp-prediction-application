@@ -13,7 +13,7 @@ export default class StatisticBox extends Component {
         return (
             <div className="sta-outerwrapper">
                 {
-                    isSearchStatisticFirst ? <h2>Please enter player name</h2> : 
+                    isSearchStatisticFirst ? <h2 style={{ color: '#fff' }}>Please enter player name</h2> : 
                     isSearchStatisticLoading ? <Loading styleObj={ styleObj }/> : 
                     err ? <h2 style={{ color: 'red' }}>{ err }</h2> : 
                     <PlayerData playerStatistic={ playerStatistic }/>
