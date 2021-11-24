@@ -11,6 +11,7 @@ app.use((request,response,next)=>{
 })
 
 app.get('/playerStatistic',(request,response)=>{
+	const playerName = request.url.split('?')[1].split('=')[1].split('+').join(' ');
 	const playerStatistics = [
 		{id:uuid(), name:'LeBron James', pts: 24.8, reb: 5.5, ast: 7.0, stl: 2.3, blk: 0.8, tov: 4.2, src: 'https://cdn.nba.com/headshots/nba/latest/1040x760/2544.png', teamSrc: 'https://cdn.nba.com/logos/nba/1610612747/primary/D/logo.svg', team: 'LosAngles Lakers'},
 		{id:uuid(), name:'Kevin Durant', pts: 29.5, reb: 8.5, ast: 5.0, stl: 0.6, blk: 0.7, tov: 3.5, src: 'https://cdn.nba.com/headshots/nba/latest/1040x760/201142.png', teamSrc: 'https://cdn.nba.com/logos/nba/1610612751/primary/D/logo.svg', team: 'Brooklyn Nets'},
@@ -23,9 +24,15 @@ app.get('/playerStatistic',(request,response)=>{
 		{id:uuid(), name:'Damian Lillard', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9, src: 'https://cdn.nba.com/headshots/nba/latest/260x190/203081.png', teamSrc: 'https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg', team: 'Portland Trail Blazers'},
 		{id:uuid(), name:'Bradley Beal', pts: 19.5, reb: 7.6, ast: 9.3, stl: 1.2, blk: 0.8, tov: 4.9, src: 'https://cdn.nba.com/headshots/nba/latest/260x190/203078.png', teamSrc: 'https://cdn.nba.com/logos/nba/1610612764/primary/D/logo.svg', team: 'Washington Wizards	'},
 	]
-	response.send(playerStatistics)
+	const filteredStatistic = filterKeyName(playerName, playerStatistics);
+	response.send(filteredStatistic)
 })
 
 app.listen(5000,(err)=>{
 	if(!err) console.log('服务器1(球员姓名)启动成功了,请求球员姓名信息地址为：http://localhost:5000/playerStatistic');
 })
+
+// 过滤关键字
+filterKeyName = (filterWord, dataObj) => {
+	return dataObj.filter(obj => obj.name === filterWord);
+}

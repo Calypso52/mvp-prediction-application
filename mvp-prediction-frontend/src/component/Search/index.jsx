@@ -12,19 +12,23 @@ export default class Search extends Component {
         } else {
             // 通知，不是初始界面了
             this.props.updateStatistic({isSearchStatisticFirst: false, isSearchStatisticLoading: true, isFilterNotFound: false});
+            // 更改url但不跳转
+            const state = { 'name': keyWord };
+            const title = '';
+            const url = `playerStatistic?name=${keyWord}`
+            window.history.pushState(state, title, url);
             setTimeout(() => {
-                // axios请求
+                // axios请求（需要封装）
                 axios
-                    // 暂时用get获取所有信息。考虑两个办法，把 keyWord 传给后端：
-                    // 1> .get(`http://localhost:3000/api1/playerName?name=${keyWord}`)
-                    // 2> .post('http://localhost:3000/api1/playerName', keyWord)
-                    .get('http://localhost:3000/api1/playerStatistic')
+                    .get('http://localhost:3000/api1/playerStatistic', {
+                        params: {
+                            name: keyWord
+                        }
+                    })
                     .then(
                         response => {
                             const responseData = response.data;
-                            // 请求成功后通知搜索数据结果栏更新状态（需要修改）
-                            const filteredName = this.filterKeyName(keyWord.toLowerCase(), responseData);
-                            this.props.updateStatistic({ playerStatistic: filteredName[0], isSearchStatisticLoading: false });
+                            this.props.updateStatistic({ playerStatistic: responseData[0], isSearchStatisticLoading: false });
                         },
                         error => {
                             // 请求失败通知搜索数据结果栏更新失败界面（需要修改）
@@ -44,6 +48,7 @@ export default class Search extends Component {
         } else {
             this.props.updatePlayerName({isSearchInterval: false, isSearchingNameLoading: true, isFilterNotFound: false});
             setTimeout(() => {
+                // 需要封装
                 axios
                     .get('http://localhost:3000/api2/playerName')
                     .then(
