@@ -33,6 +33,7 @@ export default class Search extends Component {
                         error => {
                             // 请求失败通知搜索数据结果栏更新失败界面（需要修改）
                             this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });
+                            
                         }
                     )
             }, 1000)
