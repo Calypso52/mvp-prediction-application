@@ -9,7 +9,7 @@ Under folder 'test proxy server', run order:
 
 1. Provide authentication credentials to your application code by setting the environment variable to connect bigquery:
 
-   `$env:GOOGLE_APPLICATION_CREDENTIALS="E:\database-bigquery-e39fb5537b71.json"`
+   `$env:GOOGLE_APPLICATION_CREDENTIALS="./database-bigquery-e39fb5537b71.json"`
 
 2. start server:
 
