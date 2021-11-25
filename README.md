@@ -2,28 +2,32 @@
 
 ## Front-end page startup method
 
-demo video: Front-end page demo.mp4
+Demo video: Front-end page demo.mp4
 ### 1. start server
 
 Under folder 'test proxy server', run order:
 
 1. Provide authentication credentials to your application code by setting the environment variable to connect bigquery:
 
-   `$env:GOOGLE_APPLICATION_CREDENTIALS="./database-bigquery-e39fb5537b71.json"`
+   `$env:GOOGLE_APPLICATION_CREDENTIALS=<json file path>`
 
-2. start server:
+   For example:
+
+   `$env:GOOGLE_APPLICATION_CREDENTIALS="E:\database-bigquery-e39fb5537b71.json"`
+
+2. Start server:
 
    `node server.js`
 
 ### 2. start webpage
 
-under folder 'mvp-prediction-frontend' run order:
+Under folder 'mvp-prediction-frontend' run order:
 
 1. Install modules
 
    `npm install`
 
-2. start webpage
+2. Start webpage
 
    `npm start`
 
