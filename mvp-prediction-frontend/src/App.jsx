@@ -19,7 +19,7 @@ export default class App extends Component {
     // 球员名字是否没有找到
     isFilterNotFound: false,
     // 球员各项数据
-    playerStatistic: [],
+    playerStatistic: {},
     // 搜索结果控件 -- 是否第一次搜索
     isSearchStatisticFirst: true,
     // 搜索结果控件 -- 搜索结果是否处于loading状态
