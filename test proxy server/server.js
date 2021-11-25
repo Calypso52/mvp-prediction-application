@@ -1,4 +1,5 @@
 const {BigQuery} = require('@google-cloud/bigquery');
+const bodyParser = require('body-parser')
 const bigquery = new BigQuery();
 const express = require('express')
 
@@ -39,11 +40,10 @@ app5000.get('/playerStatistic', async (request,response)=>{
 })
 
 app5000.listen(5000,(err)=>{
-	if(!err) console.log('服务器1(球员姓名)启动成功了,请求球员姓名信息地址为：http://localhost:5000/playerStatistic');
+	if(!err) console.log('服务器1(球员姓名)启动成功了,请求球员卡信息地址为：http://localhost:5000/playerStatistic');
 })
 
 /*************** 5001 port server ***************/
-var bodyParser = require('body-parser')
 const app5001 = express()
 app5001.use(bodyParser.json());
 
@@ -73,7 +73,7 @@ app5001.post('/playerName', async (request,response)=>{
 })
 
 app5001.listen(5001,(err)=>{
-	if(!err) console.log('服务器2(球员名字)启动成功了,请求球员名字信息地址为：http://localhost:5001/playerName');
+	if(!err) console.log('服务器2(球员名字)启动成功了,请求补全球员名字地址为：http://localhost:5001/playerName');
 })
 
 /*************** functions ***************/
