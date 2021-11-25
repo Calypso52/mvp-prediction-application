@@ -17,26 +17,24 @@ export default class Search extends Component {
             const title = '';
             const url = `playerStatistic?name=${keyWord}`
             window.history.pushState(state, title, url);
-            setTimeout(() => {
-                // axios请求（需要封装）
-                axios
-                    .get('http://localhost:3000/api1/playerStatistic', {
-                        params: {
-                            name: keyWord
-                        }
-                    })
-                    .then(
-                        response => {
-                            const responseData = response.data;
-                            this.props.updateStatistic({ playerStatistic: responseData[0], isSearchStatisticLoading: false });
-                        },
-                        error => {
-                            // 请求失败通知搜索数据结果栏更新失败界面（需要修改）
-                            this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });
-                            
-                        }
-                    )
-            }, 1000)
+
+            // axios请求（需要封装）
+            axios
+                .get('http://localhost:3000/api1/playerStatistic', {
+                    params: {
+                        name: keyWord
+                    }
+                })
+                .then(
+                    response => {
+                        const responseData = response.data;
+                        this.props.updateStatistic({ playerStatistic: responseData[0] || {}, isSearchStatisticLoading: false });
+                    },
+                    error => {
+                        // 请求失败通知搜索数据结果栏更新失败界面（需要修改）
+                        this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });
+                    }
+                )
         }
     }
 
@@ -48,28 +46,21 @@ export default class Search extends Component {
             this.props.updatePlayerName({players: [], isFilterNotFound: false})
         } else {
             this.props.updatePlayerName({isSearchInterval: false, isSearchingNameLoading: true, isFilterNotFound: false});
-            setTimeout(() => {
-                // 需要封装
-                axios
-                    .get('http://localhost:3000/api2/playerName')
-                    .then(
-                        response => {
-                            const responseData = response.data;
-                            const filteredName = this.filterKeyName(keyWord.toLowerCase(), responseData);
-                            if(filteredName.length) this.props.updatePlayerName({players: filteredName, isSearchingNameLoading: false});
-                            else this.props.updatePlayerName({players: [], isSearchingNameLoading: false, isFilterNotFound: true})
-                        },
-                        error => {
-                            this.props.updateStatistic({players: [], isSearchingNameLoading: false, err: error.message});
-                        }
-            )
-            },1000)
+            axios
+                .post('http://localhost:3000/api2/playerName', {
+                    name: keyWord
+                })
+                .then(
+                    response => {
+                        const responseData = response.data;
+                        if(responseData.length) this.props.updatePlayerName({players: responseData, isSearchingNameLoading: false});
+                        else this.props.updatePlayerName({players: [], isSearchingNameLoading: false, isFilterNotFound: true})
+                    },
+                    error => {
+                        this.props.updateStatistic({players: [], isSearchingNameLoading: false, err: error.message});
+                    }
+                )
         }
-    }
-
-    // 过滤包含关键字的名字
-    filterKeyName = (filterWord, dataObj) => {
-        return dataObj.filter(obj => obj.name.toLowerCase().search(filterWord) !== -1);
     }
 
     remoteSearch = () => {

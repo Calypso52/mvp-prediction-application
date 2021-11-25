@@ -16,6 +16,7 @@ export default class StatisticBox extends Component {
                     isSearchStatisticFirst ? <h2 style={{ color: '#fff' }}>Please enter player name</h2> : 
                     isSearchStatisticLoading ? <Loading styleObj={ styleObj }/> : 
                     err ? <h2 style={{ color: 'red' }}>{ err }</h2> : 
+                    !Object.keys(playerStatistic).length ? <h2 style={{ color: '#fff' }}>Please enter player name correctly</h2> : 
                     <PlayerData playerStatistic={ playerStatistic }/>
                 }
             </div>

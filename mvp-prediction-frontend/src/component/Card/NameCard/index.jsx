@@ -12,16 +12,16 @@ export default class NameCard extends Component {
                 {
                     players.map( player => {
                         return  <li 
-                                    key={ player.id }
-                                    onClick={ () => this.getName(player.name) }
+                                    key={ player.id || '' }
+                                    onClick={ () => this.getName(player.name || '') }
                                 >
                                     <div className="icon">
                                         <img 
-                                            src={ player.src }
+                                            src={ player.src || '' }
                                             alt="Anthony"
                                         />
                                     </div>
-                                    { player.name }
+                                    { player.name || '' }
                                 </li>
                     })
                 }
