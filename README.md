@@ -2,7 +2,7 @@
 
 ## Front-end page startup method
 
-demo video: Front-end page demo11.24.mp4
+demo video: Front-end page demo.mp4
 ### 1. start server
 
 Under folder 'test proxy server', run order:
@@ -27,4 +27,24 @@ under folder 'mvp-prediction-frontend' run order:
 
    `npm start`
 
-![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo11.13.png)
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo01.png)
+
+
+
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo02.png)
+
+
+
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo03.png)
+
+
+
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo04.png)
+
+
+
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo05.png)
+
+
+
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo06.png)
