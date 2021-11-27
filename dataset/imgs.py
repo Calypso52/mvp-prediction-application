@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 import time
 from selenium.webdriver.common.by import By
 import pandas as pd
+import unicodedata
 
 ####################
 # for the ongoing season
@@ -18,7 +19,9 @@ import pandas as pd
 
 
 images = list()
+teamSrc = list()
 teams = list()
+names = list()
 
 team_match = {"TOR": "Toronto Raptors",
               "MEM": "Memphis Grizzlies",
@@ -53,13 +56,40 @@ team_match = {"TOR": "Toronto Raptors",
               }
 
 
+prefix = "https://cdn.nba.com/logos/nba/"
+suffix = "/primary/L/logo.svg"
+
+
+def strip_accents(text):
+    return ''.join(char for char in
+                   unicodedata.normalize('NFKD', text)
+                   if unicodedata.category(char) != 'Mn')
+
+
 def bts_get_info(soup):
     tbody = soup.find_all("tbody")
     trs = tbody[0].find_all("tr")
     for tr in trs:
         a = tr.find_all("a")
         td = tr.find_all("td")
-        teams.append(team_match.get(td[1].text))
+        p = td[0].find_all("p")
+        name = p[0].text + " " + p[1].text
+        if len(name.split()) > 2:
+            sections = name.split()
+            name = sections[0] + " " + sections[1]
+        name = strip_accents(name)
+        if name == "Didi Louzada":
+            name = "Marcos Louzada Silva"
+        names.append(name)
+        team_info = td[1]
+        team_name = team_match.get(team_info.text, "")
+        teams.append(team_name)
+        team_src = team_info.find_all("a")
+        try:
+            team_src = team_src[0]["href"].split("/")[2]
+            teamSrc.append(prefix + team_src + suffix)
+        except IndexError:
+            teamSrc.append("")
         image = a[0].find_all("img")
         images.append(image[0]["src"])
 
@@ -80,7 +110,7 @@ def get_page_selenium():
         time.sleep(3)
 
     driver.close()
-    return images, teams
+    return images, teams, teamSrc
 
 
 def get_one_page(url, headers=None):
@@ -94,8 +124,14 @@ def get_one_page(url, headers=None):
 
 
 if __name__ == "__main__":
-    images, teams = get_page_selenium()
+    images, teams, teamSrc = get_page_selenium()
     assert len(images) == 505
     assert len(teams) == 505
-    df = pd.DataFrame(images, columns=["src"])
-    df.to_csv("photo_src.csv", index=False)
+    assert len(teamSrc) == 505
+    data = pd.DataFrame()
+    data["src"] = images
+    data["teamSrc"] = teamSrc
+    data["team"] = teams
+    data["name"] = names
+    data.to_csv("img_info.csv", index=False)
+
