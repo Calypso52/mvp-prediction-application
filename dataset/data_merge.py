@@ -34,7 +34,6 @@ def merge(dataset1, dataset2):
     teamSrc = list()
     for i in range(len(dataset1_sorted)):
         name = dataset1_sorted[i][1]
-        # print(name, i, pt2)
         while name != dataset2_sorted[pt2][-1]:
             name2 = dataset2_sorted[pt2][-1]
             if len(name) != len(name2) and IsAbbre(name, name2):
@@ -44,14 +43,15 @@ def merge(dataset1, dataset2):
         imgs.append(dataset2_sorted[pt2][0])
         teamSrc.append(dataset2_sorted[pt2][1])
         # pt2 += 1
-    return teams, imgs, teamSrc
+    return dataset1_sorted, teams, imgs, teamSrc
 
 
 if __name__ == "__main__":
     technical_stats, img_info = load_dataset("player_stats_2021_2022.csv", "img_info.csv")
-    teams, imgs, teamSrc = merge(technical_stats, img_info)
+    technical_stats_sorted, teams, imgs, teamSrc = merge(technical_stats, img_info)
     assert len(teams) == 466
-    df = pd.read_csv("player_stats_2021_2022.csv")
+    df = pd.DataFrame(technical_stats_sorted, columns=
+    ["id", "name", "reb", "ast", "stl", "blk", "tov", "pts", "src", "teamSrc", "team"])
     df["src"] = imgs
     df["teamSrc"] = teamSrc
     df["team"] = teams
