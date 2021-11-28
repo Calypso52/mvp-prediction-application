@@ -17,12 +17,14 @@ export default class Search extends Component {
             this.props.updateStatistic({isSearchStatisticFirst: false, isSearchStatisticLoading: true, isFilterNotFound: false});
 
             // 更改url但不跳转
+            /*
             const state = { 'name': keyWord };
             const title = '';
             const url = `playerStatistic?name=${keyWord}`
             window.history.pushState(state, title, url);
+            */
 
-            // get请求获取球员信息卡（使用封装好的get请求）
+            // get请求获取球员信息卡（使用封装好的get请求）（使用了promise）
             const requestParams = {name: keyWord};
             let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
             // 处理结果
@@ -45,7 +47,7 @@ export default class Search extends Component {
         } else {
             this.props.updatePlayerName({isSearchInterval: false, isSearchingNameLoading: true, isFilterNotFound: false});
 
-            // post请求获取符合条件的球员全名下拉框（使用封装好的post请求）
+            // post请求获取符合条件的球员全名下拉框（使用封装好的post请求）（使用了promise）
             const requestParams = {name: keyWord};
             let makeupNamePost = $axios.postRequest(URL.MAKEUP_PLAYER_NAME, requestParams);
             // 处理结果
