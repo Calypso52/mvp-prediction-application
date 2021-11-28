@@ -59,6 +59,8 @@ async function query(playerName, port) {
 			query = `SELECT * FROM \`database-bigquery.6893project.player_information\` WHERE name = \'${playerName}\' LIMIT 100`;
 			break;
 		case 5001:
+			// 处理名字中带有'影响SQL搜索
+			playerName = handleColon(playerName);
 			// query player information from key of name
 			query = `SELECT id, name, src FROM \`database-bigquery.6893project.player_information\` WHERE lower(name) LIKE lower(\'%${playerName}%\') LIMIT 10`;
 			break;
