@@ -10,9 +10,9 @@ def load_dataset(path1, path2):
 
 def merge(dataset1, dataset2):
     dataset1_list = list(dataset1)
-    dataset1_sorted = np.asarray(sorted(dataset1_list, key=lambda x: x[1].split()[-1]))
+    dataset1_sorted = np.asarray(sorted(dataset1_list, key=lambda x: x[1].split()[1]))
     dataset2_list = list(dataset2)
-    dataset2_sorted = np.asarray(sorted(dataset2_list, key=lambda x: x[-1].split()[-1]))
+    dataset2_sorted = np.asarray(sorted(dataset2_list, key=lambda x: x[-1].split()[1]))
     pt2 = 0
     teams = list()
     imgs = list()
