@@ -15,6 +15,7 @@ app5000.use((request,response,next)=>{
 
 app5000.get('/playerStatistic', async (request,response)=>{
 	const playerName = request.url.split('?')[1].split('=')[1].split('+').join(' ');
+	console.log(playerName);
 
 	// 数据库彻底配好后就可以删掉这一块了
 	/*
