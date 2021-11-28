@@ -5,7 +5,8 @@ export default class PlayerData extends Component {
     render() {
         const { playerStatistic } = this.props;
         const name = playerStatistic.name || '';
-        const teamSrc = playerStatistic.teamSrc || '';
+        const defaultTeam = 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nba.png?w=100&h=100&transparent=true'
+        const teamSrc = playerStatistic.teamSrc || defaultTeam;
         const src = playerStatistic.src || '';
         const team = playerStatistic.team || '';
         const pts = playerStatistic.pts || 0.0;
