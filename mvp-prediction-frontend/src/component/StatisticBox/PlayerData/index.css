@@ -7,8 +7,8 @@
 
 .playerCardWrapper {
     position: relative;
-    width: 480px;
-    height: 300px;
+    width: 580px;
+    height: 360px;
     background-color: #242526;
     border-radius: 10px;
 }
@@ -27,45 +27,46 @@
 
 .playerCardWrapper .upperWrapper .teamlogo {
     position: absolute;
-    width: 70px;
+    width: 100px;
     left: 55px;
     top: 25px;
 }
 
 .playerCardWrapper .upperWrapper .teamlogo img {
-    width: 70px;
+    width: 100px;
 }
 
 .playerCardWrapper .upperWrapper .playerLogo {
     position: absolute;
     width: 200px;
     left: 70px;
-    top: 77px;
+    top: 79px;
 }
 
 .playerCardWrapper .upperWrapper .playerLogo img {
-    width: 200px;
+    width: 260px;
 }
 
 .playerCardWrapper .upperWrapper .teamInformation {
     position: absolute;
-    left: 280px;
+    left: 350px;
     top: 55px;
 }
 
 .playerCardWrapper .upperWrapper .teamInformation p {
+    font-size: 15px;
     color: #fff;
 }
 
 .playerCardWrapper .upperWrapper .playerName {
     position: absolute;
-    left: 280px;
-    top: 70px;
+    left: 350px;
+    top: 80px;
 }
 
 .playerCardWrapper .upperWrapper .playerName p {
     color: #fff;
-    font-size: 30px;
+    font-size: 35px;
     font-weight: bold;
     margin-bottom: 0;
 }
@@ -85,8 +86,8 @@
 }
 
 .playerCardWrapper .statisticWrapper .statisticRow li {
-    height: 75px;
-    width: 75px;
+    height: 89px;
+    width: 89px;
     border-left: 1px solid grey;
     display: flex;
     /* 空白分布到元素的单侧 */
