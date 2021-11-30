@@ -19,7 +19,7 @@ export default class PlayerData extends Component {
         return (
             <div className="playerCardWrapper">
                 <div className="upperWrapper">
-                    <div className="teamBackgroundImage" style={{ background: `url('${teamSrc}') center center no-repeat`, opacity: 0.1, height: '250px' }}></div>
+                    <div className="teamBackgroundImage" style={{ background: `url('${teamSrc}') center center no-repeat`, opacity: 0.1, height: '300px' }}></div>
                     <div className="teamlogo"><img src={ teamSrc } alt="teamLogo"/></div>
                     <div className="playerLogo"><img src={ src } alt="playerLogo"/></div>
                     <div className="teamInformation"><p>{ team }</p></div>

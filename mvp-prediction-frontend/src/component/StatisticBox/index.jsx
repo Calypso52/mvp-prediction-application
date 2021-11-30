@@ -8,7 +8,7 @@ export default class StatisticBox extends Component {
         const { playerStatistic, isSearchStatisticFirst, isSearchStatisticLoading, err } = this.props;
 
         const styleObj = {
-            marginTop: '100px'
+            marginTop: '150px'
         }
         return (
             <div className="sta-outerwrapper">

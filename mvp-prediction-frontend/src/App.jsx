@@ -6,9 +6,6 @@ import StatisticBox from './component/StatisticBox'
 import PredictionBox from './component/PredictionBox'
 
 export default class App extends Component {
-  componentWillMount = () => {
-    document.body.style.backgroundImage = 'url(http://www.sinaimg.cn/dy/slidenews/2_img/2013_19/786_970279_926252.jpg)';
-  }
   state = {
     // 远程搜索下拉框数据
     players: [],
@@ -45,21 +42,24 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="outermostWrapper">
-        <Search
-          updateStatistic={this.updateStatistic}
-          updatePlayerName={this.updatePlayerName}
-          setNameToInput={this.setNameToInput}
-          {...this.state}
-        />
-        <Card
-          {...this.state}
-          setNameToInput={this.setNameToInput}
-        />
-        <StatisticBox
-          {...this.state}
-        />
-        <PredictionBox />
+      <div>
+        <div className="outermostBackground"></div>
+        <div className="outermostWrapper">
+          <Search
+            updateStatistic={this.updateStatistic}
+            updatePlayerName={this.updatePlayerName}
+            setNameToInput={this.setNameToInput}
+            {...this.state}
+          />
+          <Card
+            {...this.state}
+            setNameToInput={this.setNameToInput}
+          />
+          <StatisticBox
+            {...this.state}
+          />
+          <PredictionBox />
+        </div>
       </div>
     )
   }

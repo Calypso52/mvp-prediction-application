@@ -18,7 +18,7 @@ export default class NameCard extends Component {
                                     <div className="icon">
                                         <img 
                                             src={ player.src || '' }
-                                            alt="Anthony"
+                                            alt="name"
                                         />
                                     </div>
                                     { player.name || '' }

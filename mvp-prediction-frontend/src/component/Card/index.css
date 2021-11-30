@@ -2,17 +2,17 @@
     position: absolute;
     top: 60px;
     display: flex;
-    width: 400px;
+    width: 435px;
     overflow: scroll;
     background: #242526;
     border-radius: 5px;
-    max-height: 180px;
+    max-height: 205px;
     /* display: none; */
 }
 
 .wrapper.show {
     display: block;
-    max-height: 180px;
+    max-height: 220px;
 }
 
 .wrapper::-webkit-scrollbar {
@@ -23,7 +23,7 @@
 
 .wrapper ul {
     list-style: none;
-    width: 400px;
+    width: 435px;
     padding: 10px;
 }
 
@@ -33,9 +33,9 @@
     text-decoration: none;
     color: #b0b3b8;
     display: flex;
-    font-size: 18px;
+    font-size: 25px;
     font-weight: 500;
-    padding: 0 10px;
+    padding: 10px;
     align-items: center;
     border-radius: 8px;
 }
@@ -46,9 +46,9 @@
 }
 
 .wrapper ul li .icon {
-    height: 40px;
-    width: 40px;
-    margin-right: 13px;
+    height: 50px;
+    width: 50px;
+    margin-right: 18px;
     /* background: #ffffff1a; */
     display: flex;
     align-items: center;
@@ -57,5 +57,5 @@
 }
 
 .wrapper ul li .icon img {
-    height: 40px;
+    height: 50px;
 }
