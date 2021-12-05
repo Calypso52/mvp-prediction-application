@@ -5,6 +5,21 @@ import URL from '@/request/url'
 // 导入axios请求，重命名为：$axios
 import $axios from '@/request'
 
+// 给对象添加一个过期时间属性
+function setExpire(successResponseObj) {
+    const curHour = new Date().getHours();
+    const today_0_oclock = new Date(new Date().toLocaleDateString()).getTime();
+    let expireTime;
+    if(curHour < 5) { // 说明在当天，过期时间应设置在今天5点
+        expireTime = today_0_oclock + 5 * 60 * 60 * 1000;
+    } else { // 说明在昨天，过期时间应设置在明天5点
+        expireTime = today_0_oclock + 29 * 60 * 60 * 1000;
+    }
+
+    successResponseObj.expire = expireTime;
+    return successResponseObj;
+}
+
 export default class Search extends Component {
     // 点击搜索按钮后触发
     handleSearch = () => {
@@ -26,15 +41,30 @@ export default class Search extends Component {
 
             // get请求获取球员信息卡（使用封装好的get请求）（使用了promise）
             const requestParams = {name: keyWord};
-            let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
-            // 处理结果
-            searchStatistic
-                .then(responseData => {
-                    this.props.updateStatistic({ playerStatistic: responseData[0] || {}, isSearchStatisticLoading: false });
-                })
-                .catch(error => {
-                    this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });
-                })
+            // 获取localStorage中key值为keyWord的缓存数据。当获取不出来的时候，返回null
+            const localStorage_key = JSON.parse(localStorage.getItem(keyWord));
+            // 当有key值为当前搜索keyWord的缓存，并且缓存没有过期时，直接取出来而不发送请求
+            if(localStorage_key && (localStorage_key).expire >= new Date().getTime()) {
+                this.props.updateStatistic({ playerStatistic: localStorage_key || {}, isSearchStatisticLoading: false });
+            } else { // 没有缓存或者过期时，都要发送请求，并将结果添加/覆盖
+                let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
+                // 处理结果
+                searchStatistic
+                    .then(responseData => {
+                        this.props.updateStatistic({ playerStatistic: responseData || {}, isSearchStatisticLoading: false });
+                        // 给当前响应回来的球员数据设置一个过期时间 -- 凌晨5点。（判断有没有过当日的5点）
+                        let responseData_expire = setExpire(responseData);
+                        localStorage.setItem(keyWord, JSON.stringify(responseData_expire));
+                        // 将数据post给后端，后端将球员数据存进bigquery，供算法取出
+                        return $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, responseData);
+                    })
+                    .then(responseData => {
+                        console.log('给 后端-bigquery-算法 成功了');
+                    })
+                    .catch(error => {
+                        this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });
+                    })
+            }
         }
     }
 
@@ -43,10 +73,10 @@ export default class Search extends Component {
         // console.log('要发送axios了');
         const { value: keyWord } = this.keyWordElement;
         if(keyWord.trim().length === 0) {
-            this.props.updatePlayerName({players: [], isFilterNotFound: false})
+            this.props.updatePlayerName({players: [], isFilterNotFound: false, cardOpacity: 0 });
+            setTimeout(() => { this.props.updatePlayerName({ cardDisplay: 'none' }) }, 500);
         } else {
-            this.props.updatePlayerName({isSearchInterval: false, isSearchingNameLoading: true, isFilterNotFound: false});
-
+            this.props.updatePlayerName({isSearchInterval: false, isSearchingNameLoading: true, isFilterNotFound: false, cardOpacity: 1, cardDisplay: 'block' });
             // post请求获取符合条件的球员全名下拉框（使用封装好的post请求）（使用了promise）
             const requestParams = {name: keyWord};
             let makeupNamePost = $axios.postRequest(URL.MAKEUP_PLAYER_NAME, requestParams);
@@ -77,6 +107,11 @@ export default class Search extends Component {
         this.props.setNameToInput(e.target.value);
     }
 
+    showCard = () => {
+        const key = 'from input';
+        this.props.setCardOpacity(key);
+    }
+
     render() {
         return (
             <div className="searchWrap">
@@ -88,6 +123,7 @@ export default class Search extends Component {
                     onKeyDown={ this.clearRemoteSearch }
                     value={ this.props.selectedPlayerName }
                     onChange={ e => this.changeValue(e) }
+                    onClick={ this.showCard }
                 />
                 <span className="fas fa-search" onClick={ this.handleSearch }></span>
             </div>
