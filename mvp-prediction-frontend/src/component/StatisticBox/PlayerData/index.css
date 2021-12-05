@@ -9,8 +9,8 @@
     position: relative;
     width: 580px;
     height: 360px;
-    background-color: #242526;
-    border-radius: 10px;
+    background-color: #292D31;
+    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, .4);
 }
 
 .playerCardWrapper .upperWrapper {

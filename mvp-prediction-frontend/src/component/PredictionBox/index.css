@@ -1,12 +1,11 @@
 .pred-outerwrapper {
     position: absolute;
-    left: 800px;
-    width: 500px;
-    height: 620px;
-    background: #242526;
-    background-image: url('https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2021%2F0220%2F566746d6j00qot8gc002qd000m800rsp.jpg&thumbnail=750x2147483647&quality=85&type=jpg');
+    right: 30px;
+    top: 30px;
+    width: 940px;
+    height: 690px;
+    background: #393E44;
     background-size: cover;
-    border-radius: 15px;
     box-shadow: 0 5px 15px -5px rgba(0, 0, 0, .4);
     padding: 1%;
 }

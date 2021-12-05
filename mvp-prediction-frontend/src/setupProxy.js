@@ -16,6 +16,16 @@ module.exports = function(app) {
       target: 'http://localhost:5001',
       changeOrigin: true,
       pathRewrite: {'^/api2': ''}
+    }),
+    proxy('/api3', {
+      target: 'http://localhost:5002',
+      changeOrigin: true,
+      pathRewrite: {'^/api3': ''}
+    }),
+    proxy('/api4', {
+      target: 'http://localhost:5003',
+      changeOrigin: true,
+      pathRewrite: {'^/api4': ''}
     })
   )
 }
