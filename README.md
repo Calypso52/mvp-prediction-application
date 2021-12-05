@@ -31,24 +31,24 @@ Under folder 'mvp-prediction-frontend' run order:
 
    `npm start`
 
-![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo01.png)
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo1.png)
 
 
 
-![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo02.png)
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo2.png)
 
 
 
-![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo03.png)
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo3.png)
 
 
 
-![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo04.png)
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo4.png)
 
 
 
-![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo05.png)
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo5.png)
 
 
 
-![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo06.png)
+![image](https://github.com/Calypso52/mvp-prediction/blob/master/pictures/Front-end%20page%20demo6.png)
