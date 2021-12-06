@@ -41,8 +41,11 @@
     font-weight: bold;
 }
 
-.PlayerRelatedNewsWrapper .newsItem .newsItemTitle:hover {
-    cursor: pointer;
+.PlayerRelatedNewsWrapper .newsItem .newsItemTitle a {
+    color: #fff;
+}
+
+.PlayerRelatedNewsWrapper .newsItem .newsItemTitle:hover a {
     color: #03e9f4;
 }
 
