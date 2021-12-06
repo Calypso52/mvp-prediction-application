@@ -74,6 +74,8 @@ export default class Login extends Component {
                                 account_expire_time: new Date().getTime() + 1000 * 60 * 60
                             };
                             localStorage.setItem('Account', JSON.stringify(accountLocalStorage));
+                            // 此处遍历删掉过期的localStorage键值对
+                            this.clearExpired();
                             this.props.history.push("/mainpage");
                             break;
                         default:
@@ -95,6 +97,17 @@ export default class Login extends Component {
     // password input框颜色恢复
     passwordRestoreInitial = () => {
         this.setState({ passwordBorderButtomColor: '#fff', passwordErrorOpacity: 0 })
+    }
+
+    // 每次登陆时，都删掉存在localstorage中过期的球员数据缓存
+    clearExpired = () => {
+        const len = localStorage.length;
+        const curTime = new Date().getTime();
+        for(let i = 0; i < len; i++) {
+            let key = localStorage.key(i);
+            let value = JSON.parse(localStorage.getItem(key));
+            if(value.expire && value.expire <= curTime) localStorage.removeItem(key);
+        }
     }
 
     render() {
