@@ -1,4 +1,8 @@
 import React, { Component } from 'react'
+// 导入集中管理的url路径
+import URL from '@/request/url'
+// 导入axios请求，重命名为：$axios
+import $axios from '@/request'
 import './index.css'
 
 export default class PredictionLeftBar extends Component {
@@ -26,21 +30,32 @@ export default class PredictionLeftBar extends Component {
 
     // 查询预测结果函数
     sendPrediction = (itemIndex) => {
-        let percent;
+        const { playerStatistic } = this.props;
         switch(itemIndex) {
             case 0: // 发送MVP预测
-                percent = 0.9;
+                let MVPprediction = Object.assign({}, playerStatistic);
+                MVPprediction.predPrize = 'mvp';
+                $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, MVPprediction)
+                    .then(res => this.props.percentage(res))
+                    .catch(error => alert(error.message))
                 break;
             case 1: // 发送DPOY预测
-                percent = 0.755
+                let DPOYprediction = Object.assign({}, playerStatistic);
+                DPOYprediction.predPrize = 'dpoy';
+                $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, DPOYprediction)
+                    .then(res => this.props.percentage(res))
+                    .catch(error => alert(error.message))
                 break;
             case 2: // 发送MIP预测
-                percent = 0.15
+                let MIPprediction = Object.assign({}, playerStatistic);
+                MIPprediction.predPrize = 'mip';
+                $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, MIPprediction)
+                    .then(res => this.props.percentage(res))
+                    .catch(error => alert(error.message))
                 break;
             default:
                 break;
         }
-        this.props.percentage(percent);
     }
 
     render() {
@@ -70,21 +85,6 @@ export default class PredictionLeftBar extends Component {
                 <div className="prediction-left-bar-award">Awards Prediction</div>
                 <div></div>
                 <ul className="prediction-left-bar-menu">
-                    {/* <li className="prediction-left-bar-item" ref={ c => this.itemMVP = c } onClick={ this.predictItemClick }>
-                        <i class="fas fa-trophy"></i>
-                        <div className="prediction-prize">MVP</div>
-                        <div className="left-string"></div>
-                    </li>
-                    <li className="prediction-left-bar-item" onClick={ this.predictItemClick }>
-                        <i class="fas fa-shield-alt"></i>
-                        <div className="prediction-prize">DPOY</div>
-                        <div className="left-string"></div>
-                    </li>
-                    <li className="prediction-left-bar-item" onClick={ this.predictItemClick }>
-                        <i class="fas fa-level-up-alt"></i>
-                        <div className="prediction-prize">MIP</div>
-                        <div className="left-string"></div>
-                    </li> */}
                     { itemList }
                 </ul>
             </div>

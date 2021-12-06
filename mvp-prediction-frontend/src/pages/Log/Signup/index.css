@@ -36,6 +36,7 @@
 	/* 相对定位 */
 	position: relative;
 	width: 100%;
+	margin-bottom: 10px;
 }
 .signup .signup_box input {
 	/* 清除input框自带的边框和轮廓 */
@@ -71,7 +72,17 @@
 	font-size: 12px;
 }
 
+.signup .login_bottom {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .signup .bottom_btn {
+	outline: none;
+	border: none;
+	background-color: transparent;
 	overflow: hidden;
 	position: relative;
 	padding: 10px 20px;

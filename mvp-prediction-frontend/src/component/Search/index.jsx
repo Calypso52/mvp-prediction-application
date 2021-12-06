@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import './index.css'
+import PubSub from 'pubsub-js'
 // 导入集中管理的url路径
 import URL from '@/request/url'
 // 导入axios请求，重命名为：$axios
 import $axios from '@/request'
+import './index.css'
 
 // 给对象添加一个过期时间属性
 function setExpire(successResponseObj) {
@@ -46,6 +47,9 @@ export default class Search extends Component {
             // 当有key值为当前搜索keyWord的缓存，并且缓存没有过期时，直接取出来而不发送请求
             if(localStorage_key && (localStorage_key).expire >= new Date().getTime()) {
                 this.props.updateStatistic({ playerStatistic: localStorage_key || {}, isSearchStatisticLoading: false });
+                console.log(localStorage_key.percent);
+                PubSub.publish('clear-figure');
+                setTimeout(() => { PubSub.publish('mvp-prediction', localStorage_key.percent); }, 500);
             } else { // 没有缓存或者过期时，都要发送请求，并将结果添加/覆盖
                 let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
                 // 处理结果
@@ -56,10 +60,20 @@ export default class Search extends Component {
                         let responseData_expire = setExpire(responseData);
                         localStorage.setItem(keyWord, JSON.stringify(responseData_expire));
                         // 将数据post给后端，后端将球员数据存进bigquery，供算法取出
-                        return $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, responseData);
+                        // 深拷贝
+                        let predictionItem = Object.assign({}, responseData);
+                        predictionItem.predPrize = 'mvp';
+                        return $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, predictionItem);
                     })
                     .then(responseData => {
-                        console.log('给 后端-bigquery-算法 成功了');
+                        if(responseData === -1) console.log('给 后端-bigquery-算法 失败了');
+                        else {
+                            PubSub.publish('clear-figure');
+                            setTimeout(() => { PubSub.publish('mvp-prediction', responseData); }, 500);
+                            let localStorage_key = JSON.parse(localStorage.getItem(keyWord));
+                            localStorage_key.percent = responseData;
+                            localStorage.setItem(keyWord, JSON.stringify(localStorage_key));
+                        }
                     })
                     .catch(error => {
                         this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });

@@ -26,7 +26,7 @@ export default class Login extends Component {
 
     // 数据绑定
     changeAccountNumber = (e) => {
-        this.setState({ accountNumber: e.target.value});
+        this.setState({ accountNumber: e.target.value });
     }
 
     // 数据绑定
@@ -69,6 +69,11 @@ export default class Login extends Component {
                             this.setState({ passwordBorderButtomColor: 'red', passwordErrorOpacity: 1 });
                             break;
                         case 3:
+                            let accountLocalStorage = {
+                                account: accountNumber,
+                                account_expire_time: new Date().getTime() + 1000 * 60 * 60
+                            };
+                            localStorage.setItem('Account', JSON.stringify(accountLocalStorage));
                             this.props.history.push("/mainpage");
                             break;
                         default:
@@ -76,7 +81,7 @@ export default class Login extends Component {
                     }
                 })
                 .catch(error => {
-                    this.setState({ cursor: '' });
+                    this.setState({ cursor: 'default' });
                     alert('ERROR:', error.message);
                 })
         }
