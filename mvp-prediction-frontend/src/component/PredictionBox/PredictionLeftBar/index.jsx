@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PubSub from 'pubsub-js'
 // 导入集中管理的url路径
 import URL from '@/request/url'
 // 导入axios请求，重命名为：$axios
@@ -9,6 +10,12 @@ export default class PredictionLeftBar extends Component {
     state = {
         // 当前选中的选项序号
         currentIndex: 0
+    }
+
+    componentDidMount() {
+        PubSub.subscribe('mvp-prediction', (_, data) => {
+            this.setState({ currentIndex: 0 });
+        })
     }
 
     setCurrentIndex = (event) => {
