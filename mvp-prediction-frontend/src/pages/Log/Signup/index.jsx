@@ -105,6 +105,7 @@ export default class index extends Component {
                     // 1表示注册成功，2表示注册失败
                     switch(responseData) {
                         case 1:
+                            alert('Signup success!');
                             // 注册成功，跳转到登陆界面（故意卡一下）
                             setTimeout(() => {
                                 this.props.history.push("/login");

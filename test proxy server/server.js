@@ -149,7 +149,7 @@ app.post('/signup', async (request,response)=>{
 	const { accountNumber, passWord } = request.body;
 
 	// 判断是否有重复账号
-	const SQLpassword = await query(accountNumber, 5003);
+	const SQLpassword = await query(accountNumber, 5003, 'account_information');
 	// 有重复账号
 	if(SQLpassword.length) response.send('2');
 	else { // 没有重复账号
