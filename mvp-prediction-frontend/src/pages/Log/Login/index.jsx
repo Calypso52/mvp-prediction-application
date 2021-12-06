@@ -7,9 +7,6 @@ import URL from '@/request/url'
 import $axios from '@/request'
 
 export default class Login extends Component {
-    // click = () => {
-    //     this.props.history.push("/mainpage");
-    // }
     state = {
         // 帐号
         accountNumber: '',

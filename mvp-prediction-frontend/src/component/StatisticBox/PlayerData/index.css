@@ -69,6 +69,9 @@
     font-size: 35px;
     font-weight: bold;
     margin-bottom: 0;
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .playerCardWrapper .statisticWrapper {
