@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PubSub from 'pubsub-js'
 import PredictionLeftBar from './PredictionLeftBar'
 import PredictionMain from './PredictionMain'
 import './index.css'
@@ -17,6 +18,15 @@ export default class PredictionBox extends Component {
         leftTransition: '',
         percentageOpacity: 1,
         resultPercentage: '0%'
+    }
+
+    componentDidMount() {
+        PubSub.subscribe('mvp-prediction', (_, data) => {
+            this.percentage(data);
+        })
+        PubSub.subscribe('clear-figure', (_, data) => {
+            this.clearFigure();
+        })
     }
 
     setCurrentPrize = (itemPrize, itemIcon) => {
@@ -70,6 +80,7 @@ export default class PredictionBox extends Component {
     }
 
     render() {
+        const { playerStatistic } = this.props;
         return (
             <div className="pred-outerwrapper">
                 <PredictionLeftBar
@@ -77,6 +88,7 @@ export default class PredictionBox extends Component {
                     clearFigure={ this.clearFigure }
                     percentage={ this.percentage }
                     {...this.state}
+                    playerStatistic={ playerStatistic }
                 />
                 <PredictionMain
                     animationFirstStep={ this.animationFirstStep }

@@ -86,7 +86,9 @@ export default class MainPage extends Component {
                 {...this.state}
               />
               <PlayerRelatedNews/>
-              <PredictionBox/>
+              <PredictionBox
+                {...this.state}
+              />
             </div>
           </div>
         </div>

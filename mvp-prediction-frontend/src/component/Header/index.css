@@ -18,3 +18,35 @@
 .headerWrapper .headerLogin:hover {
     color: #03e9f4;
 }
+
+.headerWrapper .headerLogedin {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    height: 50px;
+    width: 350px;
+    font-size: 18px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.5s;
+}
+
+.headerWrapper .headerLogedin:hover {
+    color: #03e9f4;
+    cursor: pointer;
+}
+
+.headerWrapper .headerLogedin span {
+    font-weight: bold;
+}
+
+.headerWrapper .headerLogedin img {
+    position: relative;
+    right: -20px;
+    top: 0;
+    border-radius: 50%;
+}

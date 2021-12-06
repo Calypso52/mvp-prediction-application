@@ -16,11 +16,15 @@
     border: 0px;
     height: 52px;
     width: 450px;
-    color: #b0b3b8;
+    color: #fff;
     padding-left: 20px;
     font-size: 18px;
     font-weight: bold;
     background: #393E44;
+}
+
+.searchWrap input::placeholder {
+    color: #B0B3B8;
 }
 
 .searchWrap span {
