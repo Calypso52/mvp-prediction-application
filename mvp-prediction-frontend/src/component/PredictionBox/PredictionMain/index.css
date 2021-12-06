@@ -10,6 +10,22 @@
     align-items: center;
 }
 
+.prediction-result-main-wrap .prediction-result-title {
+    position: absolute;
+    display: flex;
+    top: 50px;
+    left: 50px;
+    color: #B0B3B8;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+.prediction-result-main-wrap .prediction-result-title i {
+    position: relative;
+    top: 10px;
+    margin-right: 20px;
+}
+
 .prediction-result-main-wrap .prediction-result-circle {
     mask: radial-gradient(transparent 180px, grey 180px);
     width: 550px;
@@ -22,7 +38,7 @@
 .circle-left {
     width: 50%;
     height: 100%;
-    background: #2D3136;
+    background: #606469;
     transform-origin: 100% 50%;
     position: absolute;
     left: 0;
@@ -32,7 +48,7 @@
 .circle-right {
     width: 50%;
     height: 100%;
-    background: #2D3136;
+    background: #606469;
     transition: transform 1s linear;
     transform-origin: 0% 50%;
     position: absolute;
@@ -64,4 +80,5 @@
     font-size: 60px;
     font-weight: bold;
     cursor: pointer;
+    transition: opacity 0.5s;
 }

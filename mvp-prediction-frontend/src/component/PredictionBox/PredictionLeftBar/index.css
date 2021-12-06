@@ -21,6 +21,7 @@
     height: 3px;
     background-color: #393E44;
     margin: 0 auto;
+    margin-bottom: 10px;
 }
 
 .prediction-left-bar .prediction-left-bar-menu {
@@ -43,23 +44,41 @@
     transition: color 0.5s;
 }
 
+.prediction-left-bar .prediction-left-bar-item .prediction-prize {
+    z-index: 1;
+}
+
+.prediction-left-bar .prediction-left-bar-item.active {
+    color: #89F5FA;
+}
+
+.prediction-left-bar .prediction-left-bar-item.active .prediction-active-Background {
+    position: absolute;
+    left: -10px;
+    width: 200px;
+    height: 80px;
+    background: #393E44;
+    z-index: 0;
+}
+
 .prediction-left-bar .prediction-left-bar-item:hover {
     color: #89F5FA;
 }
 
-.prediction-left-bar .prediction-left-bar-item + div {
+.prediction-left-bar .prediction-left-bar-item .left-string {
     position: absolute;
     width: 3px;
     height: 40px;
-    margin-top: -61px;
-    margin-left: -10px;
+    margin-left: -5px;
+    z-index: 1;
     transition: background 0.2s;
 }
 
-.prediction-left-bar .prediction-left-bar-item:hover + div {
+.prediction-left-bar .prediction-left-bar-item:hover .left-string {
     background: #46EFF7;
 }
 
 .prediction-left-bar .prediction-left-bar-item i {
     margin: 0 15px;
+    z-index: 1;
 }
