@@ -22,6 +22,7 @@ export default class PredictionBox extends Component {
 
     componentDidMount() {
         PubSub.subscribe('mvp-prediction', (_, data) => {
+            this.setState({ currentPrize: 'MVP', currentPrizeIcon: 'fas fa-trophy' });
             this.percentage(data);
         })
         PubSub.subscribe('clear-figure', (_, data) => {
