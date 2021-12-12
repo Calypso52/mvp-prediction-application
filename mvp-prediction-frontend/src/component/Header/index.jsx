@@ -9,7 +9,7 @@ export default class Header extends Component {
         const curTime = new Date().getTime();
         if(!logedInAccount) { // 没有登录信息
             this.setState({ account: '', isRouteToLogin: 'block', isLogedIn: 'none' });
-        } else if(curTime >= logedInAccount.account_expire_time) {  // 登陆保存时间过期了
+        } else if(curTime >= logedInAccount.expire) {  // 登陆保存时间过期了
             this.setState({ account: '', isRouteToLogin: 'block', isLogedIn: 'none' });
         } else { // 有没过期的登录信息
             this.setState({ account: logedInAccount.account, isRouteToLogin: 'none', isLogedIn: 'block' });
