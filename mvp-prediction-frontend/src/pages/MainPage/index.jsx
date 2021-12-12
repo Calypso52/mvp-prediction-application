@@ -28,7 +28,9 @@ export default class MainPage extends Component {
       // 点击input框时告知下拉框出现
       cardOpacity: 0,
       // 控制input框不显示的同时，把display设置为hidden
-      cardDisplay: 'none'
+      cardDisplay: 'none',
+      // 判断是否正在预测获奖率
+      isPredicting: false
     }
   
     // 更新球员名字下拉框
@@ -57,6 +59,12 @@ export default class MainPage extends Component {
         setTimeout(() => { this.setState({ cardDisplay: 'none' }) }, 500);
       }
     }
+
+    // 正在预测时，设置加载动画
+    setPredictingStatus = (value) => {
+      const { isPredicting } = this.state;
+      this.setState({ isPredicting: value });
+    }
   
     render() {
       return (
@@ -71,6 +79,7 @@ export default class MainPage extends Component {
                   updatePlayerName={this.updatePlayerName}
                   setNameToInput={this.setNameToInput}
                   setCardOpacity={ this.setCardOpacity }
+                  setPredictingStatus={ this.setPredictingStatus }
                   {...this.state}
                 />
                 <Card
@@ -85,8 +94,11 @@ export default class MainPage extends Component {
               <StatisticBox
                 {...this.state}
               />
-              <PlayerRelatedNews/>
+              <PlayerRelatedNews
+                {...this.state}
+              />
               <PredictionBox
+                setPredictingStatus={this.setPredictingStatus}
                 {...this.state}
               />
             </div>

@@ -11,12 +11,14 @@
 
 .PlayerRelatedNewsWrapper ul {
     list-style: none;
+    margin-bottom: 0;
 }
 
 .PlayerRelatedNewsWrapper ul .newsItem {
     position: relative;
     height: 97px;
     width: 100%;
+    overflow: hidden;
 }
 
 .PlayerRelatedNewsWrapper ul .newsCut {
@@ -26,18 +28,16 @@
 }
 
 .PlayerRelatedNewsWrapper .newsItem .newsItemTime {
-    position: absolute;
-    top: 5px;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 20px;
+    margin-bottom: 0;
     color: #B0B3B8;
 }
 
 .PlayerRelatedNewsWrapper .newsItem .newsItemTitle {
-    position: absolute;
-    top: 20px;
-    font-size: 20px;
+    font-size: 17px;
     color: #fff;
+    margin-bottom: 0;
     font-weight: bold;
 }
 
@@ -50,9 +50,7 @@
 }
 
 .PlayerRelatedNewsWrapper .newsItem .newsItemAbstract {
-    position: absolute;
-    top: 50px;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 20px;
     color: #B0B3B8;
 }

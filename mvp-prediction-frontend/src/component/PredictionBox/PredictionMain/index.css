@@ -79,5 +79,11 @@
     color: #fff;
     font-size: 60px;
     font-weight: bold;
-    transition: opacity 0.5s;
+    z-index: 1;
+    /* transition: opacity 0.5s; */
+}
+
+.prediction-result-main-wrap .prediction-result-loading {
+    position: absolute;
+    z-index: 2;
 }
