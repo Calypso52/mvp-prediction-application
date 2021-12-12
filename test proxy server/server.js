@@ -86,7 +86,7 @@ app.post('/predictionStatistic', async (request,response)=>{
 	// if(isInserted) percentage = await query(predictionStatistic.name, 5002, 'playerdata_to_alg_mvp');
 	// else response.send('-1');
 	// 1表示插入成功，2表示插入失败
-	setTimeout(() => {response.send(percentage)}, 5000);
+	setTimeout(() => {response.send(percentage)}, 1000);
 	// response.send(percentage);
 })
 

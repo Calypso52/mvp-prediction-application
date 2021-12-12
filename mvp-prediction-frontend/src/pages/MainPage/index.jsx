@@ -62,7 +62,6 @@ export default class MainPage extends Component {
 
     // 正在预测时，设置加载动画
     setPredictingStatus = (value) => {
-      const { isPredicting } = this.state;
       this.setState({ isPredicting: value });
     }
   

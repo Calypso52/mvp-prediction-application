@@ -4,22 +4,8 @@ import PubSub from 'pubsub-js'
 import URL from '@/request/url'
 // 导入axios请求，重命名为：$axios
 import $axios from '@/request'
+import { setExpire } from '@/functions'
 import './index.css'
-
-// 给对象添加一个过期时间属性
-function setExpire(successResponseObj) {
-    const curHour = new Date().getHours();
-    const today_0_oclock = new Date(new Date().toLocaleDateString()).getTime();
-    let expireTime;
-    if(curHour < 5) { // 说明在当天，过期时间应设置在今天5点
-        expireTime = today_0_oclock + 5 * 60 * 60 * 1000;
-    } else { // 说明在昨天，过期时间应设置在明天5点
-        expireTime = today_0_oclock + 29 * 60 * 60 * 1000;
-    }
-
-    successResponseObj.expire = expireTime;
-    return successResponseObj;
-}
 
 export default class Search extends Component {
     // 点击搜索按钮后触发
@@ -70,7 +56,7 @@ export default class Search extends Component {
                     .then(responseData => {
                         if(responseData === -1) console.log('给 后端-bigquery-算法 失败了');
                         else {
-                            setTimeout(() => { PubSub.publish('mvp-prediction', responseData); }, 500);
+                            setTimeout(() => { PubSub.publish('mvp-prediction', [ responseData, keyWord ]); }, 500);
                             let localStorage_key = JSON.parse(localStorage.getItem(keyWord));
                             localStorage_key.percent = responseData;
                             localStorage.setItem(keyWord, JSON.stringify(localStorage_key));
