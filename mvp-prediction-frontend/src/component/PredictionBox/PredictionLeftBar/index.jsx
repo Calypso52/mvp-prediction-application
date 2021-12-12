@@ -4,7 +4,6 @@ import PubSub from 'pubsub-js'
 import URL from '@/request/url'
 // 导入axios请求，重命名为：$axios
 import $axios from '@/request'
-import { setExpire } from '@/functions'
 import './index.css'
 
 export default class PredictionLeftBar extends Component {
@@ -42,7 +41,7 @@ export default class PredictionLeftBar extends Component {
         // true表示正在查询，显示加载动画
         this.props.setPredictingStatus(true);
         // 设置缓存预测数据的键名
-        let playerOfpredictionResult = playerStatistic.name + 'Result';
+        let playerOfpredictionResult = playerStatistic.name;
         // 获取缓存在浏览器中的球员预测结果数据，若无，返回null
         const localCache = JSON.parse(localStorage.getItem(playerOfpredictionResult));
         // 若能从缓存中读取到预测结果，就直接显示，否则发送请求到后端查询
@@ -56,11 +55,6 @@ export default class PredictionLeftBar extends Component {
                     MVPprediction.predPrize = 'mvp';
                     $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, MVPprediction)
                         .then(res => {
-                            // 缓存
-                            let predictionResult = JSON.parse(localStorage.getItem(playerOfpredictionResult)) || {};
-                            predictionResult.mvp_percentage = res;
-                            predictionResult = predictionResult.expire ? predictionResult : setExpire(predictionResult);
-                            localStorage.setItem(playerOfpredictionResult, JSON.stringify(predictionResult));
                             // 更新
                             this.props.percentage(res);
                         })
@@ -78,8 +72,6 @@ export default class PredictionLeftBar extends Component {
                             // 缓存
                             let predictionResult = JSON.parse(localStorage.getItem(playerOfpredictionResult)) || {};
                             predictionResult.dpoy_percentage = res;
-                            console.log(predictionResult);
-                            predictionResult = predictionResult.expire ? predictionResult : setExpire(predictionResult);
                             localStorage.setItem(playerOfpredictionResult, JSON.stringify(predictionResult));
                             // 更新
                             this.props.percentage(res);
@@ -98,7 +90,6 @@ export default class PredictionLeftBar extends Component {
                             // 缓存
                             let predictionResult = JSON.parse(localStorage.getItem(playerOfpredictionResult)) || {};
                             predictionResult.mip_percentage = res;
-                            predictionResult = predictionResult.expire ? predictionResult : setExpire(predictionResult);
                             localStorage.setItem(playerOfpredictionResult, JSON.stringify(predictionResult));
                             // 更新
                             this.props.percentage(res);
