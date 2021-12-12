@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import Loading from '@/component/Loading'
 import './index.css'
 
 export default class PredictionMain extends Component {
     render() {
-        const { currentPrize, currentPrizeIcon, rightTransform, rightTransition, rightOpacity, leftTransform, leftTransition, percentageOpacity, resultPercentage } = this.props;
+        const { currentPrize, isPredicting, currentPrizeIcon, rightTransform, rightTransition, rightOpacity, leftTransform, leftTransition, percentageOpacity, resultPercentage, percentTransition } = this.props;
         return (
             <div className="prediction-result-main-wrap">
                 <div className="prediction-result-title">
@@ -16,9 +17,16 @@ export default class PredictionMain extends Component {
                     <div className="circle-bottom-left"></div>
                     <div className="circle-bottom-right"></div>
                 </div>
-                <div className="prediction-result-percent" style={{ opacity: percentageOpacity }}>
-                    { resultPercentage }
-                </div>
+                {
+                    isPredicting ? 
+                    <div className="prediction-result-loading">
+                        <Loading/>
+                    </div>
+                    :
+                    <div className="prediction-result-percent" style={{ opacity: percentageOpacity, transition: percentTransition }}>
+                        { resultPercentage }
+                    </div>
+                }
             </div>
         )
     }

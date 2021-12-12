@@ -63,12 +63,13 @@ export default class Search extends Component {
                         // 深拷贝
                         let predictionItem = Object.assign({}, responseData);
                         predictionItem.predPrize = 'mvp';
+                        // 清除上一个预测结果的图像
+                        PubSub.publish('clear-figure');
                         return $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, predictionItem);
                     })
                     .then(responseData => {
                         if(responseData === -1) console.log('给 后端-bigquery-算法 失败了');
                         else {
-                            PubSub.publish('clear-figure');
                             setTimeout(() => { PubSub.publish('mvp-prediction', responseData); }, 500);
                             let localStorage_key = JSON.parse(localStorage.getItem(keyWord));
                             localStorage_key.percent = responseData;

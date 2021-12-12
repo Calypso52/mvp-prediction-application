@@ -17,7 +17,9 @@ export default class PredictionBox extends Component {
         leftTransform: '',
         leftTransition: '',
         percentageOpacity: 1,
-        resultPercentage: '0%'
+        resultPercentage: '0%',
+        // 控制百分比文字的出现是否要过渡效果
+        percentTransition: ''
     }
 
     componentDidMount() {
@@ -27,6 +29,8 @@ export default class PredictionBox extends Component {
         })
         PubSub.subscribe('clear-figure', (_, data) => {
             this.clearFigure();
+            this.setState({ percentTransition: 'opacity 0.5s' });
+            setTimeout(() => {this.props.setPredictingStatus(true);}, 500);
         })
     }
 
@@ -35,13 +39,14 @@ export default class PredictionBox extends Component {
     }
 
     percentage = (percent) => {
-        this.setState({ resultPercentage: percent * 100 + '%' });
+        this.props.setPredictingStatus(false);
+        this.setState({ resultPercentage: percent * 100 + '%', percentTransition: '' });
         let delayTime;
         if (percent <= 0.5) {  //红色区域不超过一半
             delayTime = 1100;
             this.animationFirstStep(percent);
         } else {    //红色区域超过一半的情况，重点部分
-            delayTime = percent * 2000;
+            delayTime = percent * 2700;
             this.animationSecondStep(percent);
         }
         setTimeout(() => {
@@ -59,13 +64,13 @@ export default class PredictionBox extends Component {
         this.setState({ rightTransform: `rotate(180deg)`,
                         rightTransition: `opacity 0s step-end 1s, transform 1s linear`,
                         rightOpacity: 0,
-                        leftTransition: `transform ${(percent - 0.5) / 0.5}s linear 1s`,
+                        leftTransition: `transform ${(percent - 0.5) / 0.5+1}s cubic-bezier(.12,.49,.32,1.01) 1s`,
                         leftTransform: `rotate(${percent * 360 - 180}deg)`
                         });
     }
 
     animationThirdStep = () => {
-        this.setState({ percentageOpacity: 1 });
+        this.setState({ percentageOpacity: 1, percentTransition: 'opacity 0.5s' });
     }
 
     // 将图像恢复初始值
@@ -81,13 +86,14 @@ export default class PredictionBox extends Component {
     }
 
     render() {
-        const { playerStatistic } = this.props;
+        const { playerStatistic, setPredictingStatus, isPredicting } = this.props;
         return (
             <div className="pred-outerwrapper">
                 <PredictionLeftBar
                     setCurrentPrize={ this.setCurrentPrize }
                     clearFigure={ this.clearFigure }
                     percentage={ this.percentage }
+                    setPredictingStatus={ setPredictingStatus }
                     {...this.state}
                     playerStatistic={ playerStatistic }
                 />
@@ -96,6 +102,7 @@ export default class PredictionBox extends Component {
                     animationSecondStep={ this.animationSecondStep }
                     animationThirdStep={ this.animationThirdStep }
                     {...this.state}
+                    isPredicting={ isPredicting }
                 />
             </div>
         )

@@ -38,6 +38,7 @@ export default class PredictionLeftBar extends Component {
     // 查询预测结果函数
     sendPrediction = (itemIndex) => {
         const { playerStatistic } = this.props;
+        this.props.setPredictingStatus(true);
         switch(itemIndex) {
             case 0: // 发送MVP预测
                 let MVPprediction = Object.assign({}, playerStatistic);

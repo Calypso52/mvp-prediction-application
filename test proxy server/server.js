@@ -16,7 +16,8 @@ app.use((request,response,next)=>{
 app.get('/playerStatistic', async (request,response)=>{
 	let playerName = decodeURI(request.url).split('?')[1].split('=')[1].split('+').join(' ');
 
-	const playerStatistics = await query(playerName, 5000, 'player_information');
+	// const playerStatistics = await query(playerName, 5000, 'player_information');
+	const playerStatistics = await query(playerName, 5000, 'test_table');
 	// 取小数点后1位
 	StatisticFix(playerStatistics);
 	response.send(playerStatistics[0]);
@@ -81,11 +82,12 @@ app.post('/predictionStatistic', async (request,response)=>{
 	}];
 	const isInserted = addToTable(rows, '6893project', table);
 	let percentage;
-	if(isInserted) percentage = JSON.stringify(0.975);
+	if(isInserted) percentage = JSON.stringify(0.917);
 	// if(isInserted) percentage = await query(predictionStatistic.name, 5002, 'playerdata_to_alg_mvp');
 	// else response.send('-1');
 	// 1表示插入成功，2表示插入失败
-	response.send(percentage);
+	setTimeout(() => {response.send(percentage)}, 5000);
+	// response.send(percentage);
 })
 
 app.listen(5002,(err)=>{
