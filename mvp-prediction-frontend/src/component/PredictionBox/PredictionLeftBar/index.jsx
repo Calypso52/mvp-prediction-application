@@ -4,6 +4,7 @@ import PubSub from 'pubsub-js'
 import URL from '@/request/url'
 // 导入axios请求，重命名为：$axios
 import $axios from '@/request'
+import { setExpire } from '@/functions'
 import './index.css'
 
 export default class PredictionLeftBar extends Component {
@@ -38,28 +39,72 @@ export default class PredictionLeftBar extends Component {
     // 查询预测结果函数
     sendPrediction = (itemIndex) => {
         const { playerStatistic } = this.props;
+        // true表示正在查询，显示加载动画
         this.props.setPredictingStatus(true);
+        // 设置缓存预测数据的键名
+        let playerOfpredictionResult = playerStatistic.name + 'Result';
+        // 获取缓存在浏览器中的球员预测结果数据，若无，返回null
+        const localCache = JSON.parse(localStorage.getItem(playerOfpredictionResult));
+        // 若能从缓存中读取到预测结果，就直接显示，否则发送请求到后端查询
         switch(itemIndex) {
             case 0: // 发送MVP预测
-                let MVPprediction = Object.assign({}, playerStatistic);
-                MVPprediction.predPrize = 'mvp';
-                $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, MVPprediction)
-                    .then(res => this.props.percentage(res))
-                    .catch(error => alert(error.message))
+                // 检查缓存，如果有这个球员的mvp预测结果缓存，并且没有过期，直接读取
+                if(localCache && localCache.mvp_percentage && localCache.expire >= new Date().getTime()) {
+                    this.props.percentage(localCache.mvp_percentage);
+                } else { // 否则发送请求，并把请求结果缓存
+                    let MVPprediction = Object.assign({}, playerStatistic);
+                    MVPprediction.predPrize = 'mvp';
+                    $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, MVPprediction)
+                        .then(res => {
+                            // 缓存
+                            let predictionResult = JSON.parse(localStorage.getItem(playerOfpredictionResult)) || {};
+                            predictionResult.mvp_percentage = res;
+                            predictionResult = predictionResult.expire ? predictionResult : setExpire(predictionResult);
+                            localStorage.setItem(playerOfpredictionResult, JSON.stringify(predictionResult));
+                            // 更新
+                            this.props.percentage(res);
+                        })
+                        .catch(error => alert(error.message))
+                }
                 break;
             case 1: // 发送DPOY预测
-                let DPOYprediction = Object.assign({}, playerStatistic);
-                DPOYprediction.predPrize = 'dpoy';
-                $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, DPOYprediction)
-                    .then(res => this.props.percentage(res))
-                    .catch(error => alert(error.message))
+                if(localCache && localCache.dpoy_percentage && localCache.expire >= new Date().getTime()) {
+                    this.props.percentage(localCache.dpoy_percentage);
+                } else { // 否则发送请求，并把请求结果缓存
+                    let DPOYprediction = Object.assign({}, playerStatistic);
+                    DPOYprediction.predPrize = 'dpoy';
+                    $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, DPOYprediction)
+                        .then(res => {
+                            // 缓存
+                            let predictionResult = JSON.parse(localStorage.getItem(playerOfpredictionResult)) || {};
+                            predictionResult.dpoy_percentage = res;
+                            console.log(predictionResult);
+                            predictionResult = predictionResult.expire ? predictionResult : setExpire(predictionResult);
+                            localStorage.setItem(playerOfpredictionResult, JSON.stringify(predictionResult));
+                            // 更新
+                            this.props.percentage(res);
+                        })
+                        .catch(error => alert(error.message))
+                }
                 break;
             case 2: // 发送MIP预测
-                let MIPprediction = Object.assign({}, playerStatistic);
-                MIPprediction.predPrize = 'mip';
-                $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, MIPprediction)
-                    .then(res => this.props.percentage(res))
-                    .catch(error => alert(error.message))
+                if(localCache && localCache.mip_percentage && localCache.expire >= new Date().getTime()) {
+                    this.props.percentage(localCache.mip_percentage);
+                } else { // 否则发送请求，并把请求结果缓存
+                    let MIPprediction = Object.assign({}, playerStatistic);
+                    MIPprediction.predPrize = 'mip';
+                    $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, MIPprediction)
+                        .then(res => {
+                            // 缓存
+                            let predictionResult = JSON.parse(localStorage.getItem(playerOfpredictionResult)) || {};
+                            predictionResult.mip_percentage = res;
+                            predictionResult = predictionResult.expire ? predictionResult : setExpire(predictionResult);
+                            localStorage.setItem(playerOfpredictionResult, JSON.stringify(predictionResult));
+                            // 更新
+                            this.props.percentage(res);
+                        })
+                        .catch(error => alert(error.message))
+                }
                 break;
             default:
                 break;
