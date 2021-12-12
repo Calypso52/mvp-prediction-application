@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PubSub from 'pubsub-js'
 import PredictionLeftBar from './PredictionLeftBar'
 import PredictionMain from './PredictionMain'
-import { setExpire } from '@/functions'
 import './index.css'
 
 export default class PredictionBox extends Component {
@@ -29,17 +28,16 @@ export default class PredictionBox extends Component {
             const mvpPercentage = data[0];
             const playerName = data[1];
             // 设置缓存预测数据的键名
-            const playerOfpredictionResult = playerName + 'Result';
+            const playerOfpredictionResult = playerName;
             // 获取缓存在浏览器中的球员预测结果数据，若无，返回null
             const localCache = JSON.parse(localStorage.getItem(playerOfpredictionResult));
             // 检查缓存，如果有这个球员的mvp预测结果缓存，并且没有过期，直接读取
             if(localCache && localCache.mvp_percentage && localCache.expire >= new Date().getTime()) {
-                this.props.percentage(localCache.mvp_percentage);
+                this.percentage(localCache.mvp_percentage);
             } else {
                 // 缓存
                 let predictionResult = JSON.parse(localStorage.getItem(playerOfpredictionResult)) || {};
                 predictionResult.mvp_percentage = mvpPercentage;
-                predictionResult = predictionResult.expire ? predictionResult : setExpire(predictionResult);
                 localStorage.setItem(playerOfpredictionResult, JSON.stringify(predictionResult));
             }
             this.percentage(data[0]);
@@ -47,7 +45,11 @@ export default class PredictionBox extends Component {
         PubSub.subscribe('clear-figure', (_, data) => {
             this.clearFigure();
             this.setState({ percentTransition: 'opacity 0.5s' });
-            setTimeout(() => {this.props.setPredictingStatus(true);}, 500);
+            if(data === 'hasCache') {
+                setTimeout(() => {this.props.setPredictingStatus(false);}, 500);
+            } else if(data === 'noCache') {
+                setTimeout(() => {this.props.setPredictingStatus(true);}, 500);
+            }
         })
     }
 

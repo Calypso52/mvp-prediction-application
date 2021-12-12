@@ -33,9 +33,8 @@ export default class Search extends Component {
             // 当有key值为当前搜索keyWord的缓存，并且缓存没有过期时，直接取出来而不发送请求
             if(localStorage_key && (localStorage_key).expire >= new Date().getTime()) {
                 this.props.updateStatistic({ playerStatistic: localStorage_key || {}, isSearchStatisticLoading: false });
-                console.log(localStorage_key.percent);
-                PubSub.publish('clear-figure');
-                setTimeout(() => { PubSub.publish('mvp-prediction', localStorage_key.percent); }, 500);
+                PubSub.publish('clear-figure', 'hasCache');
+                setTimeout(() => { PubSub.publish('mvp-prediction', [ localStorage_key.mvp_percentage, keyWord ]); }, 500);
             } else { // 没有缓存或者过期时，都要发送请求，并将结果添加/覆盖
                 let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
                 // 处理结果
@@ -50,7 +49,7 @@ export default class Search extends Component {
                         let predictionItem = Object.assign({}, responseData);
                         predictionItem.predPrize = 'mvp';
                         // 清除上一个预测结果的图像
-                        PubSub.publish('clear-figure');
+                        PubSub.publish('clear-figure', 'noCache');
                         return $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, predictionItem);
                     })
                     .then(responseData => {
@@ -58,7 +57,7 @@ export default class Search extends Component {
                         else {
                             setTimeout(() => { PubSub.publish('mvp-prediction', [ responseData, keyWord ]); }, 500);
                             let localStorage_key = JSON.parse(localStorage.getItem(keyWord));
-                            localStorage_key.percent = responseData;
+                            localStorage_key.mvp_percentage = responseData;
                             localStorage.setItem(keyWord, JSON.stringify(localStorage_key));
                         }
                     })
