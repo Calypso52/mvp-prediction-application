@@ -8,62 +8,78 @@ import { setExpire } from '@/functions'
 import './index.css'
 
 export default class Search extends Component {
+    state = {
+        isSearching: false
+    }
+
     // 点击搜索按钮后触发
     handleSearch = () => {
-        // 获取用户输入
-        const { value: keyWord } = this.keyWordElement;
-        if(keyWord.trim().length === 0) {
-            this.props.updateStatistic({isSearchStatisticFirst: true});
-        } else {
-            // 通知，不是初始界面了
-            this.props.updateStatistic({isSearchStatisticFirst: false, isSearchStatisticLoading: true, isFilterNotFound: false});
+        const { isSearching } = this.state;
+        // 如果不是正在搜索，就执行搜索方法
+        if(!isSearching) {
+            // 将搜索状态修改为正在搜索
+            this.setState({ isSearching: true });
+            // 获取用户输入
+            const { value: keyWord } = this.keyWordElement;
+            if(keyWord.trim().length === 0) {
+                this.props.updateStatistic({isSearchStatisticFirst: true});
+            } else {
+                // 通知，不是初始界面了
+                this.props.updateStatistic({isSearchStatisticFirst: false, isSearchStatisticLoading: true, isFilterNotFound: false});
 
-            // 更改url但不跳转
-            /*
-            const state = { 'name': keyWord };
-            const title = '';
-            const url = `playerStatistic?name=${keyWord}`
-            window.history.pushState(state, title, url);
-            */
+                // 更改url但不跳转
+                /*
+                const state = { 'name': keyWord };
+                const title = '';
+                const url = `playerStatistic?name=${keyWord}`
+                window.history.pushState(state, title, url);
+                */
 
-            // get请求获取球员信息卡（使用封装好的get请求）（使用了promise）
-            const requestParams = {name: keyWord};
-            // 获取localStorage中key值为keyWord的缓存数据。当获取不出来的时候，返回null
-            const localStorage_key = JSON.parse(localStorage.getItem(keyWord));
-            // 当有key值为当前搜索keyWord的缓存，并且缓存没有过期时，直接取出来而不发送请求
-            if(localStorage_key && (localStorage_key).expire >= new Date().getTime()) {
-                this.props.updateStatistic({ playerStatistic: localStorage_key || {}, isSearchStatisticLoading: false });
-                PubSub.publish('clear-figure', 'hasCache');
-                setTimeout(() => { PubSub.publish('mvp-prediction', [ localStorage_key.mvp_percentage, keyWord ]); }, 500);
-            } else { // 没有缓存或者过期时，都要发送请求，并将结果添加/覆盖
-                let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
-                // 处理结果
-                searchStatistic
-                    .then(responseData => {
-                        this.props.updateStatistic({ playerStatistic: responseData || {}, isSearchStatisticLoading: false });
-                        // 给当前响应回来的球员数据设置一个过期时间 -- 凌晨5点。（判断有没有过当日的5点）
-                        let responseData_expire = setExpire(responseData);
-                        localStorage.setItem(keyWord, JSON.stringify(responseData_expire));
-                        // 将数据post给后端，后端将球员数据存进bigquery，供算法取出
-                        // 深拷贝
-                        let predictionItem = Object.assign({}, responseData);
-                        predictionItem.predPrize = 'mvp';
-                        // 清除上一个预测结果的图像
-                        PubSub.publish('clear-figure', 'noCache');
-                        return $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, predictionItem);
-                    })
-                    .then(responseData => {
-                        if(responseData === -1) console.log('给 后端-bigquery-算法 失败了');
-                        else {
-                            setTimeout(() => { PubSub.publish('mvp-prediction', [ responseData, keyWord ]); }, 500);
-                            let localStorage_key = JSON.parse(localStorage.getItem(keyWord));
-                            localStorage_key.mvp_percentage = responseData;
-                            localStorage.setItem(keyWord, JSON.stringify(localStorage_key));
-                        }
-                    })
-                    .catch(error => {
-                        this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });
-                    })
+                // get请求获取球员信息卡（使用封装好的get请求）（使用了promise）
+                const requestParams = {name: keyWord};
+                // 获取localStorage中key值为keyWord的缓存数据。当获取不出来的时候，返回null
+                const localStorage_key = JSON.parse(localStorage.getItem(keyWord));
+                // 当有key值为当前搜索keyWord的缓存，并且缓存没有过期时，直接取出来而不发送请求
+                if(localStorage_key && (localStorage_key).expire >= new Date().getTime()) {
+                    this.props.updateStatistic({ playerStatistic: localStorage_key || {}, isSearchStatisticLoading: false });
+                    PubSub.publish('clear-figure', 'hasCache');
+                    setTimeout(() => { PubSub.publish('mvp-prediction', [ localStorage_key.mvp_percentage, keyWord ]); }, 500);
+                } else { // 没有缓存或者过期时，都要发送请求，并将结果添加/覆盖
+                    let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
+                    // 处理结果
+                    searchStatistic
+                        .then(responseData => {
+                            this.props.updateStatistic({ playerStatistic: responseData || {}, isSearchStatisticLoading: false });
+                            // 给当前响应回来的球员数据设置一个过期时间 -- 凌晨5点。（判断有没有过当日的5点）
+                            let responseData_expire = setExpire(responseData);
+                            localStorage.setItem(keyWord, JSON.stringify(responseData_expire));
+                            // 将数据post给后端，后端将球员数据存进bigquery，供算法取出
+                            // 深拷贝
+                            let predictionItem = Object.assign({}, responseData);
+                            predictionItem.predPrize = 'mvp';
+                            // 清除上一个预测结果的图像
+                            PubSub.publish('clear-figure', 'noCache');
+                            // 发布更改选定预测项目的消息
+                            PubSub.publish('set-selected-index', [ 0, true ]);
+                            return $axios.postRequest(URL.INPUT_DATA_TO_ALGORITHM, predictionItem);
+                        })
+                        .then(responseData => {
+                            // 搜索过程完毕，重置搜索状态为未搜索
+                            this.setState({ isSearching: false });
+                            // 搜索完毕，让预测项目选择栏变成可选状态
+                            PubSub.publish('set-selected-index', [ 0, false ]);
+                            if(responseData === -1) console.log('给 后端-bigquery-算法 失败了');
+                            else {
+                                setTimeout(() => { PubSub.publish('mvp-prediction', [ responseData, keyWord ]); }, 500);
+                                let localStorage_key = JSON.parse(localStorage.getItem(keyWord));
+                                localStorage_key.mvp_percentage = responseData;
+                                localStorage.setItem(keyWord, JSON.stringify(localStorage_key));
+                            }
+                        })
+                        .catch(error => {
+                            this.props.updateStatistic({ isSearchStatisticLoading: false, err: error.message });
+                        })
+                }
             }
         }
     }
