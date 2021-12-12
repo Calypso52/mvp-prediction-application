@@ -14,6 +14,12 @@
     margin-bottom: 0;
 }
 
+.PlayerRelatedNewsWrapper ul li {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .PlayerRelatedNewsWrapper ul .newsItem {
     position: relative;
     height: 97px;
@@ -38,6 +44,7 @@
     font-size: 17px;
     color: #fff;
     margin-bottom: 0;
+    max-width: 500px;
     font-weight: bold;
 }
 

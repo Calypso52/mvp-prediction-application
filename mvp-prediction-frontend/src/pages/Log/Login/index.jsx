@@ -71,7 +71,8 @@ export default class Login extends Component {
                         case 3:
                             let accountLocalStorage = {
                                 account: accountNumber,
-                                account_expire_time: new Date().getTime() + 1000 * 60 * 60
+                                // 账号保持登录一小时
+                                expire: new Date().getTime() + 1000 * 60 * 60
                             };
                             localStorage.setItem('Account', JSON.stringify(accountLocalStorage));
                             // 此处遍历删掉过期的localStorage键值对

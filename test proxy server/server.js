@@ -4,8 +4,17 @@ const bigquery = new BigQuery();
 const express = require('express')
 const cookieParser = require('cookie-parser');
 const { v4: uuid } = require('uuid');
+const cors = require('cors');
 const app = express()
 app.use(bodyParser.json());
+
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+
+app.use(cors(corsOptions));
 
 /*************** 5000 port server 请求球员数据 ***************/
 app.use((request,response,next)=>{
@@ -16,8 +25,7 @@ app.use((request,response,next)=>{
 app.get('/playerStatistic', async (request,response)=>{
 	let playerName = decodeURI(request.url).split('?')[1].split('=')[1].split('+').join(' ');
 
-	// const playerStatistics = await query(playerName, 5000, 'player_information');
-	const playerStatistics = await query(playerName, 5000, 'test_table');
+	const playerStatistics = await query(playerName, 5000, 'player_information');
 	// 取小数点后1位
 	StatisticFix(playerStatistics);
 	response.send(playerStatistics[0]);
@@ -86,7 +94,7 @@ app.post('/predictionStatistic', async (request,response)=>{
 	// if(isInserted) percentage = await query(predictionStatistic.name, 5002, 'playerdata_to_alg_mvp');
 	// else response.send('-1');
 	// 1表示插入成功，2表示插入失败
-	setTimeout(() => {response.send(percentage)}, 1000);
+	setTimeout(() => {response.send(percentage)}, 10000);
 	// response.send(percentage);
 })
 
@@ -109,27 +117,35 @@ app.post('/loginVerification', async (request,response)=>{
 	// 1表示账号错误，2表示密码错误，3表示成功
 
 	/*************** 缓存数据到cookie中 ***************/
-	if(request.cookies.account && request.cookies.password) {  // 首先得有，说明以前设置过
+	if(request.cookies.account && request.cookies.password) {  // cookie中有缓存的账号密码，直接读取，不作查询
 		// console.log(request.cookies);
 		if(request.cookies.account === accountNumber && request.cookies.password === passWord) {  // 都命中
 			response.send('3'); // 直接传，不用上数据库搜索了
 		} else if(request.cookies.account === accountNumber && request.cookies.password !== passWord) { // 账号对了，密码不对
 			response.send('2'); // 也直接传，不用上数据库搜索
+		} else {
+			const SQLpassword = await query(accountNumber, 5003, 'account_information');
+			if(!SQLpassword.length) response.send('1');
+			else if(SQLpassword[0].password !== passWord) {
+				response.send('2');
+			} else {
+				response.cookie('account', accountNumber, { maxAge: 60 * 1000, httpOnly: true });
+				response.cookie('password', passWord, { maxAge: 60 * 1000, httpOnly: true });
+				response.send('3');
+			}
+		}
+	} else { // cookie中没有记住的账号密码，或者存了但是没有匹配的账号时，上数据库查询，并在成功查到时更新cookie
+		const SQLpassword = await query(accountNumber, 5003, 'account_information');
+		if(!SQLpassword.length) response.send('1');
+		else if(SQLpassword[0].password !== passWord) {
+			response.send('2');
+		} else {
+			response.cookie('account', accountNumber, { maxAge: 60 * 1000, httpOnly: true });
+			response.cookie('password', passWord, { maxAge: 60 * 1000, httpOnly: true });
+			response.send('3');
 		}
 	}
-	// cookie中没有记住的账号密码，或者存了但是没有匹配的账号时，上数据库查询，并在成功查到时更新cookie
-	const SQLpassword = await query(accountNumber, 5003, 'account_information');
-	if(!SQLpassword.length) response.send('1');
-	else if(SQLpassword[0].password !== passWord) {
-		response.send('2');
-	} else {
-		response.cookie('account', accountNumber, {maxAge: 60 * 1000});
-		response.cookie('password', passWord, {maxAge: 60 * 1000});
-		response.send('3');
-	}
-	/***************************************************/
-
-	// 传统方法
+	/************************ 传统方法 ***************************/
 	// const SQLpassword = await query(accountNumber, 5003);
 	// if(!SQLpassword.length) response.send('1');
 	// else {
