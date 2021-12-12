@@ -1,8 +1,11 @@
+# -- coding: utf-8 --
+
 from bs4 import BeautifulSoup
 import requests
 from requests.exceptions import RequestException
 import collections
 import unicodedata
+import pandas as pd
 
 
 def get_one_page(url, headers=None):
@@ -40,13 +43,29 @@ def show_news(name):
     news_url = news_url.find_all("li")
     hrefs = list()
     titles = list()
+    dates = list()
+    intros = list()
+    cnt = 0
     for url in news_url:
+        if cnt >= 3:
+            break
+        intro = url.find("em")
+        if intro:
+            intro = intro.text
+            intro = intro.replace("’", "'").replace("“", "\"").replace("”", "\"").replace("\n", "").replace("\r", "").strip()
+            intros.append(intro + "...")
+        date = url.find("strong")
+        if date:
+            date = date.text
+            dates.append(date)
         url_element = url.find("a")
-        href = url_element["href"]
-        title = url_element.text
-        hrefs.append(href)
-        titles.append(title)
-    return titles, hrefs
+        if url_element:
+            href = url_element["href"]
+            title = url_element.text.replace("’", "'").replace("“", "\"").replace("”", "\"")
+            hrefs.append(href)
+            titles.append(title)
+        cnt += 1
+    return titles, hrefs, dates, intros
 
 
 if __name__ == "__main__":
@@ -73,8 +92,28 @@ if __name__ == "__main__":
                         name_package.add(name)
                     else:
                         continue
-                    link = a["href"].split("/")[-1].strip(".html")
-                    combos[name] = link
-    name = "Precious Achiuwa"
-    titles, urls = show_news(name)
+                    link = a["href"].split("/")[-1][:-5]
+                    combos[" ".join(name.split()[:2])] = link
+    players_data = pd.read_csv("player_stats_2021_2022.csv")
+    named_data = players_data.name.values
+    df = pd.DataFrame()
+    for name in named_data:
+        if name == "Mohamed Bamba":
+            name = "Mo Bamba"
+        elif name == "Enes Kanter":
+            name = "Enes Freedom"
+        elif name == "Marcos Louzada Silva":
+            name = "Didi Louzada"
+        titles, urls, dates, intros = show_news(name)
+        dates = ";".join(dates)
+        titles = ";".join(titles)
+        urls = ";".join(urls)
+        intros = ";".join(intros)
+        df = df.append({"newsDate": dates, "newsTitle": titles, "newsUrl": urls, "newsIntro": intros}, ignore_index=True)
+    df.to_csv("news.csv", index=False)
+
+    news_data = pd.read_csv("news.csv")
+    assert news_data.values.shape[0] == players_data.values.shape[0]
+    new_file = pd.concat((players_data, news_data), axis=1)
+    new_file.to_csv("players_all_2021_2022.csv", index=False)
 
