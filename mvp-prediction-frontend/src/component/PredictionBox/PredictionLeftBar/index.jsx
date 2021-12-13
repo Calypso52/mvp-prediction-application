@@ -164,7 +164,7 @@ export default class PredictionLeftBar extends Component {
                 </ul>
                 <div className="prediction-reminder" style={{ opacity: isSearchingIconOpacity }}>
                     <p>Please wait for the current prediction to be completed!!</p>
-                    <i class="fas fa-bolt"></i>
+                    <i className="fas fa-bolt"></i>
                 </div>
             </div>
         )

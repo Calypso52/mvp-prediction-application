@@ -7,6 +7,15 @@ import URL from '@/request/url'
 import $axios from '@/request'
 
 export default class Login extends Component {
+    componentDidMount() {
+        const logedInAccount = JSON.parse(localStorage.getItem('Account'));
+        const curTime = new Date().getTime();
+        // 有账号信息并且没有过期
+        if(logedInAccount && curTime < logedInAccount.expire) {
+            this.setState({ accountNumber: logedInAccount.account, passWord: logedInAccount.password });
+        }
+    }
+
     state = {
         // 帐号
         accountNumber: '',
@@ -71,6 +80,7 @@ export default class Login extends Component {
                         case 3:
                             let accountLocalStorage = {
                                 account: accountNumber,
+                                password: passWord,
                                 // 账号保持登录一小时
                                 expire: new Date().getTime() + 1000 * 60 * 60
                             };
@@ -112,6 +122,7 @@ export default class Login extends Component {
     }
 
     render() {
+        const { accountNumber, passWord } = this.state;
         return (
             <div className="loginUI">
                 <div className="login" style={{ cursor: this.state.cursor }}>
@@ -123,6 +134,7 @@ export default class Login extends Component {
                             type="text"
                             className="login_input"
                             required
+                            value={ accountNumber }
                             style={{ borderBottomColor: this.state.accountBorderButtomColor }}
                             onChange={ e => this.changeAccountNumber(e) }
                             onFocus={ this.accountRestoreInitial }
@@ -135,6 +147,7 @@ export default class Login extends Component {
                             type="password"
                             className="login_input"
                             required="required"
+                            value={ passWord }
                             style={{ borderBottomColor: this.state.passwordBorderButtomColor }}
                             onChange={ e => this.changePassWord(e) }
                             onFocus={ this.passwordRestoreInitial }

@@ -1,5 +1,5 @@
 // 给对象添加一个过期时间属性
-let setExpire = function(successResponseObj) {
+const setExpire = function(successResponseObj) {
     const curHour = new Date().getHours();
     const today_0_oclock = new Date(new Date().toLocaleDateString()).getTime();
     let expireTime;
@@ -13,7 +13,19 @@ let setExpire = function(successResponseObj) {
     return successResponseObj;
 }
 
+// 把url的params以键值对的方式返回
+const getParams = function(params, keyValuePair) {
+    const ParamsArray = params.slice(1).split('&');
+    for(let item of ParamsArray) {
+        let key = item.split('=')[0];
+        let value = item.split('=')[1];
+        keyValuePair[key] = value;
+    }
+    return keyValuePair;
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export {
-    setExpire
+    setExpire,
+    getParams
 }
