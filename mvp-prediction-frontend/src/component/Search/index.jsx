@@ -4,10 +4,27 @@ import PubSub from 'pubsub-js'
 import URL from '@/request/url'
 // 导入axios请求，重命名为：$axios
 import $axios from '@/request'
-import { setExpire } from '@/functions'
+import { setExpire, getParams } from '@/functions'
 import './index.css'
 
 export default class Search extends Component {
+    componentDidMount() {
+        const curUrlParams = decodeURI(window.location.search);
+        const paramsPair = getParams(curUrlParams, {});
+        const playerName = paramsPair.name;
+        // 获取localStorage中key值为keyWord的缓存数据。当获取不出来的时候，返回null
+        const localStorage_key = JSON.parse(localStorage.getItem(playerName));
+        // 读取缓存加载
+        if(localStorage_key && (localStorage_key).expire >= new Date().getTime()) {
+            this.setState({ isSearching: false });
+            this.props.updateStatistic({ playerStatistic: localStorage_key || {}, isSearchStatisticLoading: false, isSearchStatisticFirst: false });
+            PubSub.publish('clear-figure', 'hasCache');
+            // 发布更改选定预测项目的消息
+            PubSub.publish('set-selected-index', [ 0, false ]);
+            setTimeout(() => { PubSub.publish('mvp-prediction', [ localStorage_key.mvp_percentage, playerName ]); }, 500);
+        }
+    }
+
     state = {
         isSearching: false
     }
@@ -20,7 +37,7 @@ export default class Search extends Component {
             // 将搜索状态修改为正在搜索
             this.setState({ isSearching: true });
             // 获取用户输入
-            const { value: keyWord } = this.keyWordElement;
+            const keyWord = this.keyWordElement.value;
             if(keyWord.trim().length === 0) {
                 this.props.updateStatistic({isSearchStatisticFirst: true});
             } else {
@@ -28,12 +45,10 @@ export default class Search extends Component {
                 this.props.updateStatistic({isSearchStatisticFirst: false, isSearchStatisticLoading: true, isFilterNotFound: false});
 
                 // 更改url但不跳转
-                /*
                 const state = { 'name': keyWord };
                 const title = '';
-                const url = `playerStatistic?name=${keyWord}`
+                const url = `?name=${keyWord}`
                 window.history.pushState(state, title, url);
-                */
 
                 // get请求获取球员信息卡（使用封装好的get请求）（使用了promise）
                 const requestParams = {name: keyWord};
@@ -41,8 +56,11 @@ export default class Search extends Component {
                 const localStorage_key = JSON.parse(localStorage.getItem(keyWord));
                 // 当有key值为当前搜索keyWord的缓存，并且缓存没有过期时，直接取出来而不发送请求
                 if(localStorage_key && (localStorage_key).expire >= new Date().getTime()) {
+                    this.setState({ isSearching: false });
                     this.props.updateStatistic({ playerStatistic: localStorage_key || {}, isSearchStatisticLoading: false });
                     PubSub.publish('clear-figure', 'hasCache');
+                    // 发布更改选定预测项目的消息
+                    PubSub.publish('set-selected-index', [ 0, false ]);
                     setTimeout(() => { PubSub.publish('mvp-prediction', [ localStorage_key.mvp_percentage, keyWord ]); }, 500);
                 } else { // 没有缓存或者过期时，都要发送请求，并将结果添加/覆盖
                     let searchStatistic = $axios.getRequest(URL.PLAYER_STATISTIC, requestParams);
