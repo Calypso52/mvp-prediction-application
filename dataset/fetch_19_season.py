@@ -28,6 +28,12 @@ if __name__ == "__main__":
     candidates = ["Giannis Antetokounmpo", "LeBron James", "James Harden", "Luka Doncic",
                   "Kawhi Leonard", "Anthony Davis", "Chris Paul", "Damian Lillard", "Nikola Jokic",
                   "Pascal Siakam", "Jimmy Butler", "Jayson Tatum"]
+    mip_candidates = ["Brandon Ingram", "Bam Adebayo", "Luka Doncic", "Jayson Tatum", "Devonte' Graham", "Shai Gilgeous-Alexander",
+                      "Pascal Siakam", "Christian Wood", "Trae Young", "Fred VanVleet", "Davis Bertans",
+                      "Jaylen Brown", "Markelle Fultz", "Spencer Dinwiddie", "Duncan Robinson"]
+    dp_candidates = ["Giannis Antetokounmpo", "Anthony Davis", "Rudy Gobert", "Ben Simmons", "Bam Adebayo",
+                     "Patrick Beverley", "Marcus Smart", "Andre Drummond", "Kawhi Leonard",
+                     "Brook Lopez", "Hassan Whiteside", "Jarrett Allen"]
     html = get_one_page(url)
     soup = BeautifulSoup(html, features='html.parser')
 
@@ -53,7 +59,9 @@ if __name__ == "__main__":
                         personal_stat["id"] = str(uuid.uuid4())
                         name_package.add(name)
                         personal_stat["name"] = name
-                        personal_stat["label"] = 1 if name in candidates else 0
+                        personal_stat["mvpLabel"] = 1 if name in candidates else 0
+                        personal_stat["mipLabel"] = 1 if name in mip_candidates else 0
+                        personal_stat["dpoyLabel"] = 1 if name in dp_candidates else 0
                     else:
                         exist = True
                 else:
