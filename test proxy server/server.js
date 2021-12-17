@@ -61,41 +61,18 @@ app.use((request,response,next)=>{
 
 app.post('/predictionStatistic', async (request,response)=>{
 	const predictionStatistic = request.body;
-	// 判断预测什么奖项，要插入哪一张表
-	let table;
-	switch(predictionStatistic.predPrize) {
-		case 'mvp':
-			table = 'playerdata_to_alg_mvp';
-			break;
-		case 'dpoy':
-			table = 'playerdata_to_alg_dpoy';
-			break;
-		case 'mip':
-			table = 'playerdata_to_alg_mip';
-			break;
-		default:
-			table = 'playerdata_to_alg_mvp';
-			break;
-	}
-	const rows = [{
-		id: predictionStatistic.id,
+	// 新逻辑：对一个算好概率的的新表查询，params是一个对象，包含日期，球员id和要检索的奖项
+	const curDate = new Date();
+	const curDay = getCurDay(curDate);
+	const params = {
+		date: curDay,
 		name: predictionStatistic.name,
-		pts: predictionStatistic.pts,
-		reb: predictionStatistic.reb,
-		ast: predictionStatistic.ast,
-		blk: predictionStatistic.blk,
-		stl: predictionStatistic.stl,
-		tov: predictionStatistic.tov,
-		new_request: 1
-	}];
-	const isInserted = addToTable(rows, '6893project', table);
-	let percentage;
-	if(isInserted) percentage = JSON.stringify(0.917);
-	// if(isInserted) percentage = await query(predictionStatistic.name, 5002, 'playerdata_to_alg_mvp');
-	// else response.send('-1');
-	// 1表示插入成功，2表示插入失败
-	setTimeout(() => {response.send(percentage)}, 10000);
-	// response.send(percentage);
+		prize: predictionStatistic.predPrize
+	}
+	const prizePercentage = await query(params, 5002, `${predictionStatistic.predPrize}_prediction_results`);
+	const percentage = JSON.stringify(prizePercentage[0][`${predictionStatistic.predPrize}_prediction`]);
+	// setTimeout(() => {response.send(percentage)}, 2000);
+	response.send(percentage);
 })
 
 app.listen(5002,(err)=>{
@@ -190,26 +167,30 @@ app.listen(5004,(err)=>{
 
 /*************** functions ***************/
 // 搜索球员信息
-async function query(keyword, port, tableId) {
+async function query(params, port, tableId) {
 	let query;
 	switch(port) {
 		case 5000:
 			// 处理名字中带有'影响SQL搜索
-			keyword = handleColon(keyword);
+			params = handleColon(params);
 			// query player information from name
-			query = `SELECT * FROM \`database-bigquery.6893project.${tableId}\` WHERE name = \'${keyword}\' LIMIT 100`;
+			query = `SELECT * FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE name = \'${params}\' LIMIT 100`;
 			break;
 		case 5001:
 			// 处理名字中带有'影响SQL搜索
-			keyword = handleColon(keyword);
+			params = handleColon(params);
 			// query player information from key of name
-			query = `SELECT id, name, src FROM \`database-bigquery.6893project.${tableId}\` WHERE lower(name) LIKE lower(\'%${keyword}%\') LIMIT 10`;
+			query = `SELECT id, name, src FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE lower(name) LIKE lower(\'%${params}%\') LIMIT 10`;
 			break;
 		case 5002:
-			keyword = handleColon(keyword);
-			query = `SELECT percentage FROM \`database-bigquery.6893project.${tableId}\` WHERE name = \'${keyword}\' LIMIT 100`;
+			let prize = params.prize;
+			let name = handleColon(params.name);
+			let date = params.date;
+			query = `SELECT ${prize}_prediction FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE name = \'${name}\' AND date = \'${date}\' LIMIT 100`;
+			// query = `SELECT a FROM LIMIT 1000`;
+			break;
 		case 5003:
-			query = `SELECT password FROM \`database-bigquery.6893project.${tableId}\` WHERE account = \'${keyword}\'`;
+			query = `SELECT password FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE account = \'${params}\'`;
 			break;
 	}
 
@@ -262,4 +243,28 @@ function handleColon(name) {
 		i++;
 	}
 	return name;
+}
+
+// 由今日new Date()得到 YYYY/MM/DD 格式的字符串
+function getCurDay(date) {
+	// 返回要获取的数据的日期，格式YYYY/MM/DD
+	let curDay;
+	// 今日的时间戳
+	let curTimeStamp;
+	// 获取今日零点
+	const todayZero = new Date().setHours(0, 0, 0, 0);
+	// 获取今日凌晨5点时间
+	const todayFive = new Date().setHours(0, 0, 0, 0) + 5 * 60 * 60 * 1000;
+	// 获取当前时间
+	const curTime = new Date().getTime();
+	// 如果当前时间在0点到5点之间，设置为获取昨日日期
+	curTimeStamp = curTime < todayFive ? curTime - 24 * 60 * 60 * 1000 : curTime;
+	// 获取当天日期
+	const today = new Date(curTimeStamp);
+	const curYear = today.getFullYear().toString();
+	const curMonth = (today.getMonth() + 1).toString();
+	const curDate = today.getDate();
+
+	curDay = curYear + '-' + curMonth + '-' + curDate;
+	return curDay;
 }
