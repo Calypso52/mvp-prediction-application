@@ -166,28 +166,28 @@ app.listen(5004,(err)=>{
 
 
 /*************** functions ***************/
-// 搜索球员信息
+// Search player information
 async function query(params, port, tableId) {
 	let query;
 	switch(port) {
 		case 5000:
-			// 处理名字中带有'影响SQL搜索
+			// Processing name with'influence SQL search
 			params = handleColon(params);
 			// query player information from name
 			query = `SELECT * FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE name = \'${params}\' LIMIT 100`;
 			break;
 		case 5001:
-			// 处理名字中带有'影响SQL搜索
+			// Processing name with'influence SQL search
 			params = handleColon(params);
 			// query player information from key of name
 			query = `SELECT id, name, src FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE lower(name) LIKE lower(\'%${params}%\') LIMIT 10`;
 			break;
 		case 5002:
 			let prize = params.prize;
+			// Processing name with'influence SQL search
 			let name = handleColon(params.name);
 			let date = params.date;
 			query = `SELECT ${prize}_prediction FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE name = \'${name}\' AND date = \'${date}\' LIMIT 100`;
-			// query = `SELECT a FROM LIMIT 1000`;
 			break;
 		case 5003:
 			query = `SELECT password FROM \`bigdataproject-335101.6893project.${tableId}\` WHERE account = \'${params}\'`;
