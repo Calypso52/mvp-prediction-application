@@ -4,6 +4,7 @@ from requests.exceptions import RequestException
 import collections
 import pandas as pd
 import uuid
+import unicodedata
 
 
 def get_one_page(url, headers=None):
@@ -16,17 +17,23 @@ def get_one_page(url, headers=None):
         return None
 
 
+def strip_accents(text):
+    return ''.join(char for char in
+                   unicodedata.normalize('NFKD', text)
+                   if unicodedata.category(char) != 'Mn')
+
+
 if __name__ == "__main__":
     url = 'https://www.basketball-reference.com/leagues/NBA_2021_totals.html'
-    candidates = ["Nikola Jokić", "Joel Embiid", "Stephen Curry", "Giannis Antetokounmpo",
-                  "Chris Paul", "Chris Paul", "Luka Dončić", "Damian Lillard", "Julius Randle",
+    candidates = ["Nikola Jokic", "Joel Embiid", "Stephen Curry", "Giannis Antetokounmpo",
+                  "Chris Paul", "Chris Paul", "Luka Doncic", "Damian Lillard", "Julius Randle",
                   "Derrick Rose", "Rudy Gobert", "Russell Westbrook", "Ben Simmons", "James Harden",
                   "LeBron James", "Kawhi Leonard"]
     mip_candidates = ["Jerami Grant", "Michael Porter", "Julius Randle", "Christian Wood", "Chris Boucher",
-                      "Mikal Bridges", "Zion Williamson", "Nikola Vučević", "Clint Capela", "Jordan Poole",
+                      "Mikal Bridges", "Zion Williamson", "Nikola Vucevic", "Clint Capela", "Jordan Poole",
                       "Jordan Clarkson", "Luguentz Dort", "Darius Garland", "Kyle Anderson", "RJ Barrett",
                       "Miles Bridges", "Lonzo Ball", "T.J. McConnell", "Andrew Wiggins", "Richaun Holmes",
-                      "Bojan Bogdanović", "Terry Rozier", "Shai Gilgeous-Alexander"]
+                      "Bojan Bogdanovic", "Terry Rozier", "Shai Gilgeous-Alexander"]
     dp_candidates = ["Rudy Gobert", "Draymond Green", "Ben Simmons", "Bam Adebayo", "Giannis Antetokounmpo",
                      "Clint Capela", "Joel Embiid", "Jrue Holiday", "Myles Turner", "Jimmy Butler",
                      "Kentavious Caldwell-Pope", "Matisse Thybulle"]
@@ -50,6 +57,7 @@ if __name__ == "__main__":
                 if t.get("csk"):
                     names = t["csk"].split(",")
                     name = names[1] + " " + names[0]
+                    name = strip_accents(name)
                     if name not in name_package:
                         personal_stat["id"] = str(uuid.uuid4())
                         name_package.add(name)
