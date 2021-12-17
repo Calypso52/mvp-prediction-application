@@ -59,7 +59,9 @@ export default class PredictionBox extends Component {
 
     percentage = (percent) => {
         this.props.setPredictingStatus(false);
-        this.setState({ resultPercentage: percent * 100 + '%', percentTransition: '' });
+        // 锁精度
+        let percentStr = (percent * 100).toFixed(1);
+        this.setState({ resultPercentage: percentStr + '%', percentTransition: '' });
         let delayTime;
         if (percent <= 0.5) {  //红色区域不超过一半
             delayTime = 1100;
