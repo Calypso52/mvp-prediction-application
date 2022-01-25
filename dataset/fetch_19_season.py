@@ -1,36 +1,19 @@
 from bs4 import BeautifulSoup
-import requests
-from requests.exceptions import RequestException
 import collections
 import pandas as pd
 import uuid
-import unicodedata
-
-
-def get_one_page(url, headers=None):
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            return response.text
-        return None
-    except RequestException:
-        return None
-
-
-def strip_accents(text):
-    return ''.join(char for char in
-                   unicodedata.normalize('NFKD', text)
-                   if unicodedata.category(char) != 'Mn')
-
+from utils import *
 
 if __name__ == "__main__":
     url = 'https://www.basketball-reference.com/leagues/NBA_2020_totals.html'
     candidates = ["Giannis Antetokounmpo", "LeBron James", "James Harden", "Luka Doncic",
                   "Kawhi Leonard", "Anthony Davis", "Chris Paul", "Damian Lillard", "Nikola Jokic",
                   "Pascal Siakam", "Jimmy Butler", "Jayson Tatum"]
-    mip_candidates = ["Brandon Ingram", "Bam Adebayo", "Luka Doncic", "Jayson Tatum", "Devonte' Graham", "Shai Gilgeous-Alexander",
-                      "Pascal Siakam", "Christian Wood", "Trae Young", "Fred VanVleet", "Davis Bertans",
-                      "Jaylen Brown", "Markelle Fultz", "Spencer Dinwiddie", "Duncan Robinson"]
+    mip_candidates = {"Brandon Ingram": 326, "Bam Adebayo": 295, "Luka Doncic": 101, "Jayson Tatum": 57, "Devonte' Graham": 50,
+                      "Shai Gilgeous-Alexander": 21,
+                      "Pascal Siakam": 13, "Christian Wood": 11, "Trae Young": 10, "Fred VanVleet": 6, "Davis Bertans": 3,
+                      "Jaylen Brown": 3, "Markelle Fultz": 2, "Spencer Dinwiddie": 1, "Duncan Robinson": 1}
+    mip_candidates = label_redistribution(mip_candidates)
     dp_candidates = ["Giannis Antetokounmpo", "Anthony Davis", "Rudy Gobert", "Ben Simmons", "Bam Adebayo",
                      "Patrick Beverley", "Marcus Smart", "Andre Drummond", "Kawhi Leonard",
                      "Brook Lopez", "Hassan Whiteside", "Jarrett Allen"]
@@ -60,7 +43,7 @@ if __name__ == "__main__":
                         name_package.add(name)
                         personal_stat["name"] = name
                         personal_stat["mvpLabel"] = 1 if name in candidates else 0
-                        personal_stat["mipLabel"] = 1 if name in mip_candidates else 0
+                        personal_stat["mipLabel"] = mip_candidates[name] if name in mip_candidates else 0
                         personal_stat["dpoyLabel"] = 1 if name in dp_candidates else 0
                     else:
                         exist = True
