@@ -1,26 +1,8 @@
 from bs4 import BeautifulSoup
-import requests
-from requests.exceptions import RequestException
 import collections
 import pandas as pd
 import uuid
-import unicodedata
-
-
-def get_one_page(url, headers=None):
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            return response.text
-        return None
-    except RequestException:
-        return None
-
-
-def strip_accents(text):
-    return ''.join(char for char in
-                   unicodedata.normalize('NFKD', text)
-                   if unicodedata.category(char) != 'Mn')
+from utils import *
 
 
 if __name__ == "__main__":
@@ -29,11 +11,12 @@ if __name__ == "__main__":
                   "Chris Paul", "Chris Paul", "Luka Doncic", "Damian Lillard", "Julius Randle",
                   "Derrick Rose", "Rudy Gobert", "Russell Westbrook", "Ben Simmons", "James Harden",
                   "LeBron James", "Kawhi Leonard"]
-    mip_candidates = ["Jerami Grant", "Michael Porter", "Julius Randle", "Christian Wood", "Chris Boucher",
-                      "Mikal Bridges", "Zion Williamson", "Nikola Vucevic", "Clint Capela", "Jordan Poole",
-                      "Jordan Clarkson", "Luguentz Dort", "Darius Garland", "Kyle Anderson", "RJ Barrett",
-                      "Miles Bridges", "Lonzo Ball", "T.J. McConnell", "Andrew Wiggins", "Richaun Holmes",
-                      "Bojan Bogdanovic", "Terry Rozier", "Shai Gilgeous-Alexander"]
+    mip_candidates = {"Jerami Grant": 140, "Michael Porter": 138, "Julius Randle": 493, "Christian Wood": 44, "Chris Boucher": 10,
+                      "Mikal Bridges": 8, "Zion Williamson": 6, "Nikola Vucevic": 3, "Clint Capela": 3, "Jordan Poole": 3,
+                      "Jordan Clarkson": 3, "Luguentz Dort": 3, "Darius Garland": 3, "Kyle Anderson": 2, "RJ Barrett": 2,
+                      "Miles Bridges": 2, "Lonzo Ball": 1, "T.J. McConnell": 1, "Andrew Wiggins": 1, "Richaun Holmes": 1,
+                      "Bojan Bogdanovic": 1, "Terry Rozier": 1, "Shai Gilgeous-Alexander": 1}
+    mip_candidates = label_redistribution(mip_candidates)
     dp_candidates = ["Rudy Gobert", "Draymond Green", "Ben Simmons", "Bam Adebayo", "Giannis Antetokounmpo",
                      "Clint Capela", "Joel Embiid", "Jrue Holiday", "Myles Turner", "Jimmy Butler",
                      "Kentavious Caldwell-Pope", "Matisse Thybulle"]
@@ -63,7 +46,7 @@ if __name__ == "__main__":
                         name_package.add(name)
                         personal_stat["name"] = name
                         personal_stat["mvpLabel"] = 1 if name in candidates else 0
-                        personal_stat["mipLabel"] = 1 if name in mip_candidates else 0
+                        personal_stat["mipLabel"] = mip_candidates[name] if name in mip_candidates else 0
                         personal_stat["dpoyLabel"] = 1 if name in dp_candidates else 0
                     else:
                         exist = True

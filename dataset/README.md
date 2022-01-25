@@ -10,3 +10,8 @@ For DPOY prediction, please think of a way of using all data.
 
 You may notice sample imbalance problem and you may want to do re-sampling, or assign different weights to different classes.
 
+## Personal Solution
+
+For MVP and DPOY prediction, ensemble models are enough. With the enhancement of resampling, the prediction reaches higher in recall.
+
+For MIP prediction, we consider a formula `Normalize((curYear-prevYear)*prevYear)`. Using absolute difference is the easiest way of telling a player's improvement. Considering previous year's performance is also necessary, as it is hard for an excellent player to improve as a not excellent player.
